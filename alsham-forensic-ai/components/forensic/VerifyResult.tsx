@@ -1,7 +1,8 @@
 'use client'
 import { useState } from 'react'
-import { Shield, Hash } from 'lucide-react'
-import { verdictColor } from '@/lib/utils'
+import { Shield, Copy, ExternalLink, CheckCircle, XCircle } from 'lucide-react'
+import { verdictColor, verdictLabel, formatDate } from '@/lib/utils'
+import { CidSeal, HashVerification, NormativeShield } from '@/components/icons'
 
 interface VerifyData {
   cid_code: string
@@ -15,13 +16,14 @@ interface VerifyData {
   text_preview: string
   created_at: string
   analysis_engine: string
-  forensic_summary?: string
 }
 
 export function VerifyResult({ data, cid }: { data: Record<string, string | number>; cid: string }) {
   const d = data as unknown as VerifyData
   const [inputText, setInputText] = useState('')
   const [hashStatus, setHashStatus] = useState<'idle' | 'match' | 'mismatch'>('idle')
+  const [copied, setCopied] = useState(false)
+
   const color = verdictColor(d.verdict)
 
   async function verifyHash() {
@@ -31,94 +33,174 @@ export function VerifyResult({ data, cid }: { data: Record<string, string | numb
     setHashStatus(hash === d.text_hash ? 'match' : 'mismatch')
   }
 
+  async function copyLink() {
+    await navigator.clipboard.writeText(window.location.href)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   return (
-    <div style={{ maxWidth: 600, width: '100%', fontFamily: 'system-ui, sans-serif' }}>
-      {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: 28 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 12 }}>
-          <Shield size={20} color="#C9A84C" />
-          <span style={{ fontSize: 10, letterSpacing: 4, color: '#C9A84C' }}>ALSHAM GLOBAL COMMERCE · CID</span>
+    <div style={{
+      width: '100%', maxWidth: 580,
+      fontFamily: 'var(--font-inter, system-ui)',
+    }}>
+      {/* ─── SEAL HEADER ─── */}
+      <div style={{ textAlign: 'center', marginBottom: 32 }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+          <div style={{
+            width: 48, height: 48, borderRadius: '50%',
+            border: '1.5px solid color-mix(in srgb, var(--brand-gold) 50%, transparent)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <Shield size={22} style={{ color: 'var(--brand-gold)' }} />
+          </div>
         </div>
-        <div style={{ fontSize: 22, fontWeight: 700, color: '#F8FAFC', letterSpacing: 1, fontFamily: 'monospace' }}>{cid}</div>
-        <div style={{ fontSize: 12, color: '#64748B', marginTop: 6 }}>
-          Emitido em {new Date(d.created_at).toLocaleString('pt-BR')}
+        <div style={{ fontSize: 10, letterSpacing: '0.2em', color: 'var(--brand-gold)', fontFamily: 'var(--font-mono)', marginBottom: 6 }}>
+          ALSHAM GLOBAL COMMERCE · CERTIFICADO DE INTEGRIDADE DIGITAL
+        </div>
+        <div className="cid" style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '0.08em' }}>
+          {cid}
+        </div>
+        <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 6 }}>
+          Emitido em {formatDate(d.created_at)}
         </div>
       </div>
 
-      {/* Score block */}
-      <div style={{ background: '#1B2A4A', borderRadius: 12, padding: 24, marginBottom: 12, textAlign: 'center' }}>
-        <div style={{ fontSize: 56, fontWeight: 800, color, lineHeight: 1 }}>{d.overall_ai_score}</div>
-        <div style={{ fontSize: 11, letterSpacing: 3, color, marginTop: 6 }}>{d.verdict}</div>
-        <div style={{ fontSize: 13, color: '#94A3B8', marginTop: 8 }}>Modelo detectado: {d.detected_model}</div>
+      {/* ─── SCORE BLOCK ─── */}
+      <div style={{
+        background: 'var(--surface-800)',
+        border: '1px solid color-mix(in srgb, var(--brand-gold) 25%, transparent)',
+        borderRadius: 16, padding: '28px 24px', marginBottom: 12, textAlign: 'center',
+      }}>
+        <div className="score-value" style={{ fontSize: 64, fontWeight: 700, color, lineHeight: 1 }}>
+          {d.overall_ai_score}
+        </div>
+        <div style={{ fontSize: 11, letterSpacing: '0.18em', color, marginTop: 8, fontFamily: 'var(--font-mono)' }}>
+          {d.verdict}
+        </div>
+        <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 10 }}>
+          {verdictLabel(d.verdict)} · Modelo detectado: <strong style={{ color: 'var(--text-primary)' }}>{d.detected_model}</strong>
+        </div>
       </div>
 
-      {/* Details */}
-      <div style={{ background: '#1B2A4A', borderRadius: 12, padding: 16, marginBottom: 12 }}>
-        <table style={{ width: '100%', fontSize: 13, color: '#F8FAFC', borderCollapse: 'collapse' }}>
+      {/* ─── DETAILS TABLE ─── */}
+      <div style={{
+        background: 'var(--surface-800)', borderRadius: 16,
+        border: '1px solid var(--border-soft)', padding: '16px 20px', marginBottom: 12,
+      }}>
+        <table style={{ width: '100%', fontSize: 13, borderCollapse: 'collapse' }}>
           <tbody>
             {([
               ['Instituição', d.institution_name],
               ['Conformidade', d.compliance_verdict],
-              ['Risco', d.compliance_risk],
-              ['Motor', d.analysis_engine],
-              ['Hash SHA-256', d.text_hash ? d.text_hash.slice(0, 20) + '...' : 'N/A'],
-            ] as [string, string | number][]).map(([k, v]) => (
+              ['Nível de risco', d.compliance_risk],
+              ['Motor de análise', d.analysis_engine],
+            ] as [string, string][]).map(([k, v]) => (
               <tr key={k}>
-                <td style={{ color: '#64748B', padding: '7px 0', width: '40%' }}>{k}</td>
-                <td style={{ textAlign: 'right', padding: '7px 0' }}>{v}</td>
+                <td style={{ color: 'var(--text-muted)', padding: '7px 0', width: '45%' }}>{k}</td>
+                <td style={{ textAlign: 'right', padding: '7px 0', color: 'var(--text-primary)' }}>{v}</td>
               </tr>
             ))}
+            <tr>
+              <td style={{ color: 'var(--text-muted)', padding: '7px 0' }}>SHA-256</td>
+              <td className="hash" style={{ textAlign: 'right', fontSize: 10, color: 'var(--text-muted)', padding: '7px 0', wordBreak: 'break-all' }}>
+                {d.text_hash?.slice(0, 24)}…
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
 
-      {/* Hash verification */}
-      <div style={{ background: '#1B2A4A', borderRadius: 12, padding: 18, marginBottom: 12 }}>
-        <div style={{ fontSize: 10, letterSpacing: 2, color: '#C9A84C', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-          <Hash size={12} />
-          VERIFICAR DOCUMENTO ORIGINAL
+      {/* ─── HASH VERIFICATION ─── */}
+      <div style={{
+        background: 'var(--surface-800)', borderRadius: 16,
+        border: '1px solid var(--border-soft)', padding: '20px', marginBottom: 12,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+          <HashVerification size={15} style={{ color: 'var(--brand-gold)' }} />
+          <span style={{ fontSize: 10, letterSpacing: '0.15em', color: 'var(--brand-gold)', fontFamily: 'var(--font-mono)' }}>
+            VERIFICAR DOCUMENTO ORIGINAL
+          </span>
         </div>
-        <p style={{ fontSize: 12, color: '#94A3B8', margin: '0 0 12px', lineHeight: 1.5 }}>
+        <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '0 0 12px', lineHeight: 1.6 }}>
           Cole o texto exato do documento para confirmar que este certificado corresponde a ele.
         </p>
         <textarea
           value={inputText}
           onChange={e => { setInputText(e.target.value); setHashStatus('idle') }}
-          placeholder="Cole o texto do documento aqui..."
+          placeholder="Cole o texto do documento aqui…"
           style={{
-            width: '100%', minHeight: 80, background: '#0A0F1E', color: '#F8FAFC',
-            border: '1px solid #2D3A56', borderRadius: 8, padding: 10,
-            fontSize: 12, boxSizing: 'border-box', resize: 'vertical',
-            fontFamily: 'inherit', outline: 'none',
+            width: '100%', minHeight: 80, background: 'var(--ink-950)',
+            color: 'var(--text-primary)', border: '1px solid var(--border-strong)',
+            borderRadius: 10, padding: 10, fontSize: 12,
+            boxSizing: 'border-box', resize: 'vertical',
+            fontFamily: 'var(--font-inter)', outline: 'none',
           }}
         />
         <button
           onClick={verifyHash}
           disabled={!inputText.trim()}
           style={{
-            marginTop: 10, background: inputText.trim() ? '#C9A84C' : '#2D3A56',
-            color: inputText.trim() ? '#0A0F1E' : '#64748B',
-            border: 'none', padding: '9px 22px', borderRadius: 6,
-            fontWeight: 700, cursor: inputText.trim() ? 'pointer' : 'not-allowed', fontSize: 13,
+            marginTop: 10,
+            background: inputText.trim() ? 'var(--brand-gold)' : 'var(--surface-700)',
+            color: inputText.trim() ? 'var(--ink-950)' : 'var(--text-muted)',
+            border: 'none', padding: '9px 24px', borderRadius: 8,
+            fontWeight: 700, fontSize: 13,
+            cursor: inputText.trim() ? 'pointer' : 'not-allowed',
           }}
         >
           Verificar Hash SHA-256
         </button>
 
         {hashStatus === 'match' && (
-          <div style={{ marginTop: 12, padding: '12px 16px', background: '#14532D', borderRadius: 8, color: '#86EFAC', fontSize: 13, fontWeight: 600 }}>
-            ✓ DOCUMENTO AUTÊNTICO — Hash SHA-256 confere com o certificado original.
+          <div className="bg-success-sf" style={{ marginTop: 12, padding: '12px 16px', borderRadius: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <CheckCircle size={16} style={{ color: 'var(--status-success)', flexShrink: 0 }} />
+            <span className="cert-verified" style={{ fontSize: 13, fontWeight: 600 }}>
+              DOCUMENTO AUTÊNTICO — Hash SHA-256 confere com o certificado original.
+            </span>
           </div>
         )}
         {hashStatus === 'mismatch' && (
-          <div style={{ marginTop: 12, padding: '12px 16px', background: '#7F1D1D', borderRadius: 8, color: '#FCA5A5', fontSize: 13, fontWeight: 600 }}>
-            ⛔ ALERTA DE FRAUDE — O texto não corresponde ao documento analisado neste certificado.
+          <div className="bg-danger-sf" style={{ marginTop: 12, padding: '12px 16px', borderRadius: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <XCircle size={16} style={{ color: 'var(--status-danger)', flexShrink: 0 }} />
+            <span className="cert-fraud" style={{ fontSize: 13, fontWeight: 600 }}>
+              ALERTA DE FRAUDE — O texto não corresponde ao documento analisado neste certificado.
+            </span>
           </div>
         )}
       </div>
 
-      {/* Footer */}
-      <div style={{ textAlign: 'center', fontSize: 10, color: '#334155' }}>
+      {/* ─── SHARE ─── */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+        <button
+          onClick={copyLink}
+          style={{
+            flex: 1, background: 'var(--surface-700)', color: copied ? 'var(--status-success)' : 'var(--text-secondary)',
+            border: '1px solid var(--border-soft)', borderRadius: 10,
+            padding: '10px 0', fontSize: 13, fontWeight: 500, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+          }}
+        >
+          <Copy size={14} />{copied ? 'Link copiado!' : 'Copiar link'}
+        </button>
+        <a
+          href={`/verify/${cid}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            flex: 1, background: 'var(--surface-700)', color: 'var(--text-secondary)',
+            border: '1px solid var(--border-soft)', borderRadius: 10,
+            padding: '10px 0', fontSize: 13, fontWeight: 500, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            textDecoration: 'none',
+          }}
+        >
+          <ExternalLink size={14} /> Abrir página
+        </a>
+      </div>
+
+      {/* ─── FOOTER ─── */}
+      <div style={{ textAlign: 'center', fontSize: 10, color: 'var(--border-strong)', fontFamily: 'var(--font-mono)' }}>
         ALSHAM FORENSIC AI™ · forensic.alshamglobal.com.br · ALSHAM Global Commerce Ltda
       </div>
     </div>

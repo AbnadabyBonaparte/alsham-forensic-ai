@@ -1,218 +1,191 @@
-'use client'
-import { useState } from 'react'
 import Link from 'next/link'
-import { Shield, FileText, Hash, AlertTriangle, CheckCircle, TrendingUp, BookOpen, Zap, Lock, Globe } from 'lucide-react'
+import { CheckCircle, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import {
+  NormativeShield, CidSeal, HashVerification,
+  BibliographicCheck, RiskEscalation,
+} from '@/components/icons'
 
-const PLANS = [
-  {
-    id: 'free',
-    name: 'Gratuito',
-    price: 'R$0',
-    period: '',
-    analyses: 3,
-    chars: '2.000',
-    pdf: false,
-    api: false,
-    scholar: false,
-    cta: 'Analisar Agora',
-    href: '/analyze',
-    highlight: false,
-  },
-  {
-    id: 'estudantil',
-    name: 'Estudantil',
-    price: 'R$29,90',
-    period: '/mês',
-    analyses: 30,
-    chars: '8.000',
-    pdf: false,
-    api: false,
-    scholar: true,
-    cta: 'Assinar',
-    href: '/signup?plan=estudantil',
-    highlight: false,
-  },
-  {
-    id: 'profissional',
-    name: 'Profissional',
-    price: 'R$89,90',
-    period: '/mês',
-    analyses: 150,
-    chars: '20.000',
-    pdf: true,
-    api: false,
-    scholar: true,
-    cta: 'Assinar',
-    href: '/signup?plan=profissional',
-    highlight: true,
-  },
-  {
-    id: 'institucional',
-    name: 'Institucional',
-    price: 'R$497,00',
-    period: '/mês',
-    analyses: -1,
-    chars: '50.000',
-    pdf: true,
-    api: true,
-    scholar: true,
-    cta: 'Contato',
-    href: 'mailto:comercial@alshamglobal.com.br',
-    highlight: false,
-  },
+const TRUST_ITEMS = [
+  { Icon: NormativeShield, label: 'Normativas CNPq 2664/2026 e UFPB 57/2025' },
+  { Icon: CidSeal,         label: 'Certificado de Integridade Digital (CID)' },
+  { Icon: HashVerification,label: 'Hash SHA-256 público e verificável' },
+  { Icon: BibliographicCheck, label: 'Citações verificadas em tempo real' },
+  { Icon: RiskEscalation,  label: 'Dosimetria de sanção por reenvio' },
+]
+
+const HOW_STEPS = [
+  { n: '01', title: 'Cole o texto',           desc: 'Textoarea com detecção automática de paste e hash SHA-256.' },
+  { n: '02', title: 'Selecione a instituição', desc: '11 instituições com normativas reais mapeadas.' },
+  { n: '03', title: 'Análise ensemble',        desc: 'Claude claude-sonnet-4 (70%) + GPT-4o-mini (30%) em paralelo.' },
+  { n: '04', title: 'Laudo jurídico',          desc: 'Conformidade citada por artigo, citações verificadas.' },
+  { n: '05', title: 'Certificado CID',          desc: 'Hash + QR verificável publicamente. Download PDF.' },
 ]
 
 const COMPARISON = [
-  { feature: 'Normativas CNPq 2664/2026', alsham: true, gptzero: false, turnitin: false, originality: false },
-  { feature: 'Resolucao UFPB 57/2025', alsham: true, gptzero: false, turnitin: false, originality: false },
-  { feature: 'Certificado CID com SHA-256', alsham: true, gptzero: false, turnitin: false, originality: false },
-  { feature: 'Verificacao publica de hash', alsham: true, gptzero: false, turnitin: false, originality: false },
-  { feature: 'Deteccao de burla (reenvio)', alsham: true, gptzero: false, turnitin: false, originality: false },
-  { feature: 'Links Google Scholar', alsham: true, gptzero: true, turnitin: false, originality: false },
-  { feature: 'Motor ensemble (2 LLMs)', alsham: true, gptzero: false, turnitin: false, originality: true },
-  { feature: 'Precos em BRL', alsham: true, gptzero: false, turnitin: false, originality: false },
+  { feat: 'Normativas CNPq 2664/2026',     al: true,  gz: false, tt: false, or: false },
+  { feat: 'Certif. CID com SHA-256',        al: true,  gz: false, tt: false, or: false },
+  { feat: 'Verificação pública de hash',  al: true,  gz: false, tt: false, or: false },
+  { feat: 'Detecção de burla por reenvio', al: true,  gz: false, tt: false, or: false },
+  { feat: 'Links Google Scholar',           al: true,  gz: true,  tt: false, or: false },
+  { feat: 'Motor ensemble dual',            al: true,  gz: false, tt: false, or: true  },
+  { feat: 'Preços em BRL',                  al: true,  gz: false, tt: false, or: false },
 ]
 
-const DIFFERENTIALS = [
-  {
-    icon: Shield,
-    title: 'Conformidade CNPq 2664/2026',
-    desc: 'Unico sistema que cita artigos especificos da portaria em cada laudo. Aceito como evidencia em processo administrativo universitario.',
-  },
-  {
-    icon: Hash,
-    title: 'Certificado de Integridade Digital',
-    desc: 'CID com hash SHA-256 verificavel publicamente. QR code para validacao instantanea. Imutavel e auditavel.',
-  },
-  {
-    icon: AlertTriangle,
-    title: 'Dosimetria de Sancao',
-    desc: 'Detecta tentativa de burla por reenvio. Registra historico de submissoes e tendencia de score para processo disciplinar.',
-  },
-  {
-    icon: BookOpen,
-    title: 'Verificacao Bibliografica',
-    desc: 'Cada citacao verificada em tempo real via Tavily + Scholar. Badge de risco: real, suspeita ou fantasma.',
-  },
-  {
-    icon: Zap,
-    title: 'Motor Ensemble Dual',
-    desc: 'Claude claude-sonnet-4 (70%) + GPT-4o-mini (30%). Perplexidade, burstiness, fingerprinting de LLM por modelo.',
-  },
-  {
-    icon: Lock,
-    title: 'Laudo Juridicamente Redigido',
-    desc: 'Resumo forense em linguagem tecnico-juridica. Recomendacao de acao para comissao disciplinar.',
-  },
+const FAQ = [
+  { q: 'O resultado é juridicamente válido?', a: 'O laudo cita artigos específicos de portarias federais (CNPq) e resoluções institucionais. O CID com hash SHA-256 serve como evidência em processo administrativo.' },
+  { q: 'Falsos positivos são possíveis?',      a: 'Sim — todo sistema de detecção tem taxa de erro. O ALSHAM usa ensemble de dois LLMs + estilometria para minimizar isso. Sempre revisar com o contexto do autor.' },
+  { q: 'Os textos são armazenados?',           a: 'Apenas o hash SHA-256 e a prévia (200 chars) são salvos para emissão do CID. O texto completo nunca é retido.' },
+  { q: 'Funciona para outras línguas?',        a: 'Sim. O motor Claude suporta português, inglês e espanhol com alta precisão.' },
 ]
 
 export default function LandingPage() {
-  const [demoText, setDemoText] = useState('')
-
   return (
-    <div style={{ background: '#0A0F1E', minHeight: '100vh', color: '#F8FAFC' }}>
-      {/* Hero */}
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '100px 24px 80px', textAlign: 'center' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#1B2A4A', border: '1px solid #C9A84C33', borderRadius: 100, padding: '6px 16px', marginBottom: 24 }}>
-          <Shield size={14} color="#C9A84C" />
-          <span style={{ fontSize: 12, color: '#C9A84C', letterSpacing: 2 }}>CONFORMIDADE CNPQ 2664/2026 · UFPB 57/2025</span>
+    <div style={{ background: 'var(--bg-app)', color: 'var(--text-primary)', minHeight: '100vh' }}>
+
+      {/* ─────────── HERO ─────────── */}
+      <section className="glow-blue" style={{ maxWidth: 1100, margin: '0 auto', padding: '100px 24px 80px', textAlign: 'center' }}>
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          background: 'var(--surface-700)', border: '1px solid color-mix(in srgb, var(--brand-gold) 30%, transparent)',
+          borderRadius: 999, padding: '6px 18px', marginBottom: 28,
+        }}>
+          <NormativeShield size={13} style={{ color: 'var(--brand-gold)' }} />
+          <span style={{ fontSize: 11, color: 'var(--brand-gold)', letterSpacing: '0.15em', fontFamily: 'var(--font-mono)' }}>
+            CONFORMIDADE CNPq 2664/2026 · UFPB 57/2025
+          </span>
         </div>
-        <h1 style={{ fontSize: 'clamp(32px, 5vw, 60px)', fontWeight: 800, lineHeight: 1.1, marginBottom: 24 }}>
-          Oúnico detector forense de IA{' '}
-          <span style={{ color: '#C9A84C' }}>com conformidade jurídica</span>
-          {' '}institucional
+
+        <h1 style={{
+          fontSize: 'clamp(32px, 5vw, 62px)', fontWeight: 700,
+          lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: 24,
+          color: 'var(--text-primary)',
+        }}>
+          A auditoria forense de IA<br />
+          <span style={{ color: 'var(--brand-gold)' }}>que universidades conseguem defender.</span>
         </h1>
-        <p style={{ fontSize: 18, color: '#94A3B8', maxWidth: 680, margin: '0 auto 40px', lineHeight: 1.7 }}>
-          Laudos forenses com referencia à Portaria CNPq 2664/2026 e Resolução UFPB 57/2025.
-          Certificado de Integridade Digital com hash SHA-256 verificavel publicamente.
+
+        <p style={{
+          fontSize: 18, color: 'var(--text-secondary)', maxWidth: 680,
+          margin: '0 auto 44px', lineHeight: 1.7,
+        }}>
+          Detecte texto sintético, valide citações, aplique normativas reais
+          e emita um Certificado de Integridade Digital verificável.
         </p>
+
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link href="/signup">
-            <Button style={{ background: '#C9A84C', color: '#0A0F1E', fontWeight: 700, padding: '12px 28px', fontSize: 15 }}>
-              Analisar Gratuitamente
-            </Button>
+            <button style={{
+              background: 'var(--brand-gold)', color: 'var(--ink-950)',
+              fontWeight: 700, fontSize: 15, padding: '13px 28px',
+              borderRadius: 10, border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: 8,
+            }}>
+              Analisar gratuitamente <ArrowRight size={16} />
+            </button>
           </Link>
-          <Link href="/pricing">
-            <Button variant="outline" style={{ borderColor: '#C9A84C33', color: '#C9A84C', padding: '12px 28px', fontSize: 15 }}>
-              Ver Planos
-            </Button>
-          </Link>
+          <a href="mailto:comercial@alshamglobal.com.br">
+            <button style={{
+              background: 'transparent', color: 'var(--brand-gold)',
+              fontWeight: 600, fontSize: 15, padding: '13px 28px',
+              borderRadius: 10, border: '1px solid color-mix(in srgb, var(--brand-gold) 40%, transparent)',
+              cursor: 'pointer',
+            }}>
+              Solicitar plano institucional
+            </button>
+          </a>
         </div>
-        <p style={{ marginTop: 16, fontSize: 12, color: '#64748B' }}>Sem cartão · 3 análises gratuitas · Resultado em &lt;30 segundos</p>
+        <p style={{ marginTop: 16, fontSize: 12, color: 'var(--text-muted)' }}>
+          Sem cartão · 3 análises gratuitas · Resultado em &lt;30 segundos
+        </p>
       </section>
 
-      {/* Demo box */}
-      <section style={{ maxWidth: 800, margin: '0 auto 80px', padding: '0 24px' }}>
-        <div style={{ background: '#1B2A4A', borderRadius: 16, padding: 32, border: '1px solid #2D3A56' }}>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A84C', marginBottom: 12 }}>DEMO INTERATIVO</div>
-          <textarea
-            value={demoText}
-            onChange={e => setDemoText(e.target.value)}
-            placeholder="Cole um trecho de texto acadêmico aqui (mínimo 80 caracteres) para testar gratuitamente..."
-            style={{
-              width: '100%', minHeight: 120, background: '#0A0F1E', color: '#F8FAFC',
-              border: '1px solid #2D3A56', borderRadius: 8, padding: 14, fontSize: 14,
-              boxSizing: 'border-box', resize: 'vertical', outline: 'none', fontFamily: 'inherit',
-            }}
-          />
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
-            <span style={{ fontSize: 12, color: '#64748B' }}>{demoText.length} / 2.000 caracteres</span>
-            <Link href={`/analyze?demo=${encodeURIComponent(demoText.slice(0, 200))}`}>
-              <Button
-                disabled={demoText.length < 80}
-                style={{ background: demoText.length >= 80 ? '#C9A84C' : '#2D3A56', color: demoText.length >= 80 ? '#0A0F1E' : '#64748B', fontWeight: 700 }}
-              >
-                Analisar Texto
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Differentials */}
-      <section style={{ maxWidth: 1100, margin: '0 auto 80px', padding: '0 24px' }}>
-        <h2 style={{ fontSize: 32, fontWeight: 700, textAlign: 'center', marginBottom: 48 }}>
-          Por que o <span style={{ color: '#C9A84C' }}>ALSHAM Forensic</span> é diferente
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
-          {DIFFERENTIALS.map(d => (
-            <div key={d.title} style={{ background: '#1B2A4A', borderRadius: 12, padding: 24, border: '1px solid #2D3A56' }}>
-              <d.icon size={24} color="#C9A84C" style={{ marginBottom: 12 }} />
-              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 8 }}>{d.title}</h3>
-              <p style={{ fontSize: 13, color: '#94A3B8', lineHeight: 1.6 }}>{d.desc}</p>
+      {/* ─────────── TRUST RAIL ─────────── */}
+      <section style={{ borderTop: '1px solid var(--border-soft)', borderBottom: '1px solid var(--border-soft)', padding: '28px 24px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', flexWrap: 'wrap', gap: 24, justifyContent: 'center' }}>
+          {TRUST_ITEMS.map(({ Icon, label }) => (
+            <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <Icon size={18} style={{ color: 'var(--brand-gold)', flexShrink: 0 }} />
+              <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{label}</span>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Comparison */}
-      <section style={{ maxWidth: 1000, margin: '0 auto 80px', padding: '0 24px' }}>
-        <h2 style={{ fontSize: 32, fontWeight: 700, textAlign: 'center', marginBottom: 48 }}>
-          ALSHAM vs Concorrentes
+      {/* ─────────── DEMO INTERATIVO ─────────── */}
+      <section style={{ maxWidth: 820, margin: '80px auto', padding: '0 24px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <h2 style={{ fontSize: 32, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 12 }}>
+            Mais do que detectar IA: <span style={{ color: 'var(--brand-gold)' }}>produzir evidência</span>
+          </h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 16 }}>Cole um trecho agora. Sem cadastro.</p>
+        </div>
+        <div className="panel" style={{ padding: 28 }}>
+          <div style={{ fontSize: 10, letterSpacing: '0.15em', color: 'var(--brand-gold)', fontFamily: 'var(--font-mono)', marginBottom: 14 }}>DEMO INTERATIVO</div>
+          <textarea
+            placeholder="Cole um trecho de texto acadêmico aqui (mínimo 80 caracteres)..."
+            style={{
+              width: '100%', minHeight: 120, background: 'var(--ink-950)',
+              color: 'var(--text-primary)', border: '1px solid var(--border-strong)',
+              borderRadius: 12, padding: 14, fontSize: 14, boxSizing: 'border-box',
+              resize: 'vertical', outline: 'none', fontFamily: 'var(--font-inter)',
+            }}
+          />
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
+            <Link href="/signup">
+              <button style={{
+                background: 'var(--brand-gold)', color: 'var(--ink-950)',
+                fontWeight: 700, padding: '10px 22px', borderRadius: 10,
+                border: 'none', cursor: 'pointer', fontSize: 14,
+              }}>Analisar texto →</button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────── COMO FUNCIONA ─────────── */}
+      <section style={{ maxWidth: 1100, margin: '0 auto 80px', padding: '0 24px' }}>
+        <h2 style={{ fontSize: 32, fontWeight: 600, textAlign: 'center', marginBottom: 48, letterSpacing: '-0.02em' }}>
+          Do score ao <span style={{ color: 'var(--brand-gold)' }}>certificado verificável</span>
         </h2>
-        <div style={{ background: '#1B2A4A', borderRadius: 16, overflow: 'hidden', border: '1px solid #2D3A56' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
+          {HOW_STEPS.map(s => (
+            <div key={s.n} className="panel-inner" style={{ padding: 22 }}>
+              <div className="mono" style={{ fontSize: 11, color: 'var(--brand-gold)', marginBottom: 10, letterSpacing: '0.12em' }}>{s.n}</div>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--text-primary)' }}>{s.title}</div>
+              <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{s.desc}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─────────── COMPARATIVO ─────────── */}
+      <section style={{ maxWidth: 900, margin: '0 auto 80px', padding: '0 24px' }}>
+        <h2 style={{ fontSize: 32, fontWeight: 600, textAlign: 'center', marginBottom: 40, letterSpacing: '-0.02em' }}>
+          Conformidade acadêmica com <span style={{ color: 'var(--brand-gold)' }}>rastreabilidade pública</span>
+        </h2>
+        <div className="panel" style={{ overflow: 'hidden', padding: 0 }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid #2D3A56' }}>
-                <th style={{ padding: '16px 20px', textAlign: 'left', fontSize: 12, color: '#94A3B8' }}>Funcionalidade</th>
-                <th style={{ padding: '16px 12px', textAlign: 'center', fontSize: 12, color: '#C9A84C', fontWeight: 800 }}>ALSHAM</th>
-                <th style={{ padding: '16px 12px', textAlign: 'center', fontSize: 12, color: '#94A3B8' }}>GPTZero</th>
-                <th style={{ padding: '16px 12px', textAlign: 'center', fontSize: 12, color: '#94A3B8' }}>Turnitin</th>
-                <th style={{ padding: '16px 12px', textAlign: 'center', fontSize: 12, color: '#94A3B8' }}>Originality</th>
+              <tr style={{ borderBottom: '1px solid var(--border-soft)' }}>
+                {['Funcionalidade', 'ALSHAM', 'GPTZero', 'Turnitin', 'Originality'].map((h, i) => (
+                  <th key={h} style={{
+                    padding: '14px 20px', textAlign: i === 0 ? 'left' : 'center',
+                    fontSize: 12, color: i === 1 ? 'var(--brand-gold)' : 'var(--text-muted)',
+                    fontWeight: i === 1 ? 700 : 500,
+                  }}>{h}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {COMPARISON.map((row, i) => (
-                <tr key={row.feature} style={{ borderBottom: i < COMPARISON.length - 1 ? '1px solid #0F1A2E' : 'none' }}>
-                  <td style={{ padding: '14px 20px', fontSize: 13, color: '#CBD5E1' }}>{row.feature}</td>
-                  {(['alsham', 'gptzero', 'turnitin', 'originality'] as const).map(col => (
-                    <td key={col} style={{ padding: '14px 12px', textAlign: 'center' }}>
-                      {row[col]
-                        ? <CheckCircle size={16} color={col === 'alsham' ? '#16A34A' : '#94A3B8'} />
-                        : <span style={{ color: '#374151', fontSize: 18 }}>-</span>
-                      }
+                <tr key={row.feat} style={{ borderBottom: i < COMPARISON.length - 1 ? '1px solid var(--border-soft)' : 'none' }}>
+                  <td style={{ padding: '13px 20px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.feat}</td>
+                  {[row.al, row.gz, row.tt, row.or].map((v, j) => (
+                    <td key={j} style={{ textAlign: 'center', padding: '13px 12px' }}>
+                      {v
+                        ? <CheckCircle size={15} style={{ color: j === 0 ? 'var(--status-success)' : 'var(--text-muted)', margin: '0 auto' }} />
+                        : <span style={{ color: 'var(--border-strong)', fontSize: 16 }}>–</span>}
                     </td>
                   ))}
                 </tr>
@@ -222,36 +195,118 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section style={{ background: '#1B2A4A', padding: '60px 24px', marginBottom: 80 }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 32, textAlign: 'center' }}>
+      {/* ─────────── BLOCO INSTITUCIONAL ─────────── */}
+      <section style={{ background: 'var(--surface-800)', borderTop: '1px solid var(--border-soft)', borderBottom: '1px solid var(--border-soft)', padding: '60px 24px', marginBottom: 80 }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center' }}>
+          <div>
+            <div style={{ fontSize: 10, letterSpacing: '0.15em', color: 'var(--brand-gold)', fontFamily: 'var(--font-mono)', marginBottom: 16 }}>PARA COORDENAÇÕES E ORIENTADORES</div>
+            <h2 style={{ fontSize: 28, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 16 }}>
+              A plataforma forense para programas de pós-graduação
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 15, lineHeight: 1.7, marginBottom: 24 }}>
+              Plano Institucional com análises ilimitadas, normativas personalizadas
+              e acesso API para integração direta com sistemas acadêmicos.
+            </p>
+            <a href="mailto:comercial@alshamglobal.com.br">
+              <button style={{
+                background: 'var(--brand-gold)', color: 'var(--ink-950)',
+                fontWeight: 700, padding: '12px 24px', borderRadius: 10,
+                border: 'none', cursor: 'pointer', fontSize: 14,
+              }}>Solicitar demonstração institucional</button>
+            </a>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {['Conformidade citada por artigo de normativa', 'CID emitido por análise — provável em processo', 'Histórico de reenvios por usuário', 'API REST para integração institucional', 'Suporte prioritário e SLA'].map(f => (
+              <div key={f} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                <CheckCircle size={16} style={{ color: 'var(--status-success)', marginTop: 2, flexShrink: 0 }} />
+                <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>{f}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────── PRICING ─────────── */}
+      <section style={{ maxWidth: 1100, margin: '0 auto 80px', padding: '0 24px' }}>
+        <h2 style={{ fontSize: 32, fontWeight: 600, textAlign: 'center', marginBottom: 12, letterSpacing: '-0.02em' }}>Valide autoria, citações e risco institucional</h2>
+        <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: 48 }}>em um só fluxo</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
           {[
-            { value: '$142M', label: 'Mercado global 2025' },
-            { value: '34%', label: 'Crescimento anual' },
-            { value: '8M+', label: 'Estudantes de pós no Brasil' },
-            { value: '<30s', label: 'Tempo de análise' },
-          ].map(s => (
-            <div key={s.label}>
-              <div style={{ fontSize: 36, fontWeight: 800, color: '#C9A84C' }}>{s.value}</div>
-              <div style={{ fontSize: 13, color: '#94A3B8', marginTop: 6 }}>{s.label}</div>
+            { id: 'free',         name: 'Gratuito',      price: 'R$0',      period: '',      analyses: 3,    chars: '2.000',  highlight: false },
+            { id: 'estudantil',   name: 'Estudantil',    price: 'R$29,90',  period: '/mês',  analyses: 30,   chars: '8.000',  highlight: false },
+            { id: 'profissional', name: 'Profissional',  price: 'R$89,90',  period: '/mês',  analyses: 150,  chars: '20.000', highlight: true  },
+            { id: 'institucional',name: 'Institucional', price: 'R$497',    period: '/mês',  analyses: -1,   chars: '50.000', highlight: false },
+          ].map(p => (
+            <div key={p.id} style={{
+              background: p.highlight ? 'var(--surface-600)' : 'var(--surface-800)',
+              border: p.highlight ? '2px solid var(--brand-gold)' : '1px solid var(--border-soft)',
+              borderRadius: 20, padding: 28, position: 'relative',
+            }}>
+              {p.highlight && (
+                <div style={{
+                  position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
+                  background: 'var(--brand-gold)', color: 'var(--ink-950)',
+                  fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', padding: '4px 16px',
+                  borderRadius: 999, fontFamily: 'var(--font-mono)',
+                }}>MAIS POPULAR</div>
+              )}
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--brand-gold)', marginBottom: 8 }}>{p.name}</div>
+              <div style={{ fontSize: 30, fontWeight: 700, color: 'var(--text-primary)' }}>
+                {p.price}<span style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 400 }}>{p.period}</span>
+              </div>
+              <div style={{ fontSize: 13, color: 'var(--text-muted)', margin: '12px 0 20px' }}>
+                {p.analyses === -1 ? 'Análises ilimitadas' : `${p.analyses} análises/mês`} · até {p.chars} chars
+              </div>
+              <Link href={p.id === 'free' ? '/signup' : `/signup?plan=${p.id}`}>
+                <button style={{
+                  width: '100%', background: p.highlight ? 'var(--brand-gold)' : 'transparent',
+                  color: p.highlight ? 'var(--ink-950)' : 'var(--brand-gold)',
+                  border: p.highlight ? 'none' : '1px solid color-mix(in srgb, var(--brand-gold) 50%, transparent)',
+                  borderRadius: 10, padding: '10px 0', fontWeight: 600, cursor: 'pointer', fontSize: 14,
+                }}>Começar</button>
+              </Link>
             </div>
           ))}
         </div>
       </section>
 
-      {/* CTA */}
-      <section style={{ maxWidth: 700, margin: '0 auto 80px', padding: '0 24px', textAlign: 'center' }}>
-        <h2 style={{ fontSize: 36, fontWeight: 800, marginBottom: 16 }}>
-          Comece a usar <span style={{ color: '#C9A84C' }}>gratuitamente</span>
+      {/* ─────────── FAQ ─────────── */}
+      <section style={{ maxWidth: 720, margin: '0 auto 80px', padding: '0 24px' }}>
+        <h2 style={{ fontSize: 28, fontWeight: 600, textAlign: 'center', marginBottom: 40, letterSpacing: '-0.02em' }}>Perguntas frequentes</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {FAQ.map(item => (
+            <div key={item.q} className="panel-inner" style={{ padding: '18px 22px' }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>{item.q}</div>
+              <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.65 }}>{item.a}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─────────── CTA FINAL ─────────── */}
+      <section style={{ background: 'var(--surface-800)', borderTop: '1px solid var(--border-soft)', padding: '70px 24px', textAlign: 'center' }}>
+        <h2 style={{ fontSize: 36, fontWeight: 700, letterSpacing: '-0.03em', marginBottom: 16 }}>
+          Analisar <span style={{ color: 'var(--brand-gold)' }}>gratuitamente</span>
         </h2>
-        <p style={{ color: '#94A3B8', marginBottom: 32, fontSize: 16 }}>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 32, fontSize: 16 }}>
           3 análises gratuitas. Sem cartão de crédito. Resultado em menos de 30 segundos.
         </p>
-        <Link href="/signup">
-          <Button style={{ background: '#C9A84C', color: '#0A0F1E', fontWeight: 700, padding: '14px 36px', fontSize: 16 }}>
-            Criar Conta Gratuita
-          </Button>
-        </Link>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link href="/signup">
+            <button style={{
+              background: 'var(--brand-gold)', color: 'var(--ink-950)',
+              fontWeight: 700, fontSize: 16, padding: '14px 36px',
+              borderRadius: 10, border: 'none', cursor: 'pointer',
+            }}>Analisar gratuitamente</button>
+          </Link>
+          <a href="mailto:comercial@alshamglobal.com.br">
+            <button style={{
+              background: 'transparent', color: 'var(--text-secondary)',
+              fontWeight: 500, fontSize: 15, padding: '14px 28px',
+              borderRadius: 10, border: '1px solid var(--border-strong)', cursor: 'pointer',
+            }}>Solicitar demonstração institucional</button>
+          </a>
+        </div>
       </section>
     </div>
   )

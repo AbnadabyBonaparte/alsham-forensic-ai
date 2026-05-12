@@ -1,12 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { VerifyResult } from '@/components/forensic/VerifyResult'
+import { Shield } from 'lucide-react'
 
 export async function generateMetadata({ params }: { params: Promise<{ cid: string }> }) {
   const { cid } = await params
   return {
     title: `Verificação CID ${cid} — ALSHAM Forensic AI`,
-    description: 'Verifique a autenticidade deste Certificado de Integridade Digital',
+    description: 'Verifique a autenticidade deste Certificado de Integridade Digital.',
     robots: 'noindex',
   }
 }
@@ -18,15 +19,21 @@ export default async function VerifyPage({ params }: { params: Promise<{ cid: st
   if (!data) notFound()
 
   return (
-    <main style={{
+    <div style={{
       minHeight: '100vh',
-      background: '#0A0F1E',
+      background: 'var(--bg-app)',
       display: 'flex',
+      flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '2rem',
+      padding: '48px 24px',
     }}>
-      <VerifyResult data={data as Record<string, string | number>} cid={cid} />
-    </main>
+      {/* Subtle glow */}
+      <div className="glow-gold" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }} />
+
+      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: 580 }}>
+        <VerifyResult data={data as Record<string, string | number>} cid={cid} />
+      </div>
+    </div>
   )
 }
