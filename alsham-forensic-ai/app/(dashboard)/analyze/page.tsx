@@ -19,7 +19,7 @@ export default async function AnalyzePage() {
       .single(),
   ])
 
-  const plan = (profileRes.data?.plans as Record<string, unknown> | null) ?? {}
+  const plan = (profileRes.data?.plans as unknown as Record<string, unknown> | null) ?? {}
 
   return (
     <AnalyzeForm
