@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
   await supabase.from('stripe_events').insert({
     id: event.id,
     type: event.type,
-    payload: event.data.object as Record<string, unknown>,
+    payload: event.data.object as unknown as Record<string, unknown>,
     processed: false,
   }).onConflict('id').ignore()
 
