@@ -1,10 +1,12 @@
-interface IconProps { size?: number; className?: string }
+import { CSSProperties } from 'react';
 
-export function RiskEscalation({ size = 24, className }: IconProps) {
+interface IconProps { size?: number; className?: string; style?: CSSProperties }
+
+export function RiskEscalation({ size = 24, className, style }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
-      className={className}>
+      className={className} style={style}>
       <rect x="3"  y="14" width="4" height="7" rx="1" />
       <rect x="10" y="9"  width="4" height="12" rx="1" />
       <rect x="17" y="4"  width="4" height="17" rx="1" />

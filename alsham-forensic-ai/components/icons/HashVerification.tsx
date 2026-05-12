@@ -1,10 +1,12 @@
-interface IconProps { size?: number; className?: string }
+import { CSSProperties } from 'react';
 
-export function HashVerification({ size = 24, className }: IconProps) {
+interface IconProps { size?: number; className?: string; style?: CSSProperties }
+
+export function HashVerification({ size = 24, className, style }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
-      className={className}>
+      className={className} style={style}>
       <line x1="10" y1="5" x2="8" y2="19" />
       <line x1="16" y1="5" x2="14" y2="19" />
       <line x1="6" y1="9" x2="20" y2="9" />
