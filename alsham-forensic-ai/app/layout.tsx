@@ -1,18 +1,29 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
-  title: 'ALSHAM Forensic AI — Detecção Forense de IA Acadêmica',
+  title: 'ALSHAM Forensic AI — A auditoria forense de IA que universidades conseguem defender.',
   description:
-    'O único detector forense com conformidade CNPq 2664/2026 e UFPB 57/2025. Certificado de Integridade Digital com hash SHA-256 verifyável.',
-  keywords: ['detector IA', 'plagíato acadêmico', 'CNPq', 'forense', 'ChatGPT detector'],
+    'Detecte texto sintético, valide citações, aplique normativas reais e emita um Certificado de Integridade Digital verificável.',
+  keywords: ['detector IA', 'plágio acadêmico', 'CNPq', 'forense', 'ChatGPT detector'],
   openGraph: {
     title: 'ALSHAM Forensic AI',
-    description: 'Detecção forense de IA com conformidade CNPq 2664/2026',
+    description: 'Auditoria forense de IA com conformidade CNPq 2664/2026',
     type: 'website',
   },
 }
@@ -20,7 +31,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${ibmPlexMono.variable} font-sans antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>

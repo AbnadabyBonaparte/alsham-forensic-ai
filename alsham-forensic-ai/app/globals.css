@@ -2,64 +2,152 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 222 47% 7%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 214 68% 20%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 217 32% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 32% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 43 65% 54%;
-    --accent-foreground: 222 47% 7%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 32% 17%;
-    --input: 217 32% 17%;
-    --ring: 43 65% 54%;
-    --radius: 0.5rem;
-  }
+/* ============================================================
+   FORENSIC SOVEREIGN PALETTE — ALSHAM Global Commerce
+   ============================================================ */
+:root {
+  /* Brand / Core */
+  --ink-950:     #08111F;
+  --ink-900:     #0C1628;
+  --surface-800: #101D33;
+  --surface-700: #162540;
+  --surface-600: #1B2A4A;
 
+  /* Accent */
+  --brand-gold:  #C7A24A;
+  --gold-hover:  #D7B867;
+  --brand-blue:  #5B8CFF;
+
+  /* Text */
+  --text-primary:   #F5F7FB;
+  --text-secondary: #A2AEC2;
+  --text-muted:     #7E8BA3;
+
+  /* Signals */
+  --status-success: #18B26B;
+  --status-warning: #D79B2F;
+  --status-danger:  #E15454;
+  --status-info:    #4DA3FF;
+
+  /* Borders */
+  --border-strong: #2B3B57;
+  --border-soft:   #1E2B42;
+
+  /* Background FX */
+  --glow-blue: rgba(91, 140, 255, 0.12);
+  --glow-gold: rgba(199, 162, 74, 0.10);
+
+  /* Semantic aliases */
+  --bg-app:      var(--ink-950);
+  --bg-surface:  var(--surface-800);
+  --bg-elevated: var(--surface-700);
+
+  /* Alert surface backgrounds */
+  --surface-danger:  rgba(225, 84,  84,  0.10);
+  --surface-warning: rgba(215, 155, 47,  0.10);
+  --surface-success: rgba(24,  178, 107, 0.10);
+
+  /* shadcn/ui HSL bridge */
+  --background:           222 47% 7%;
+  --foreground:           214 25% 98%;
+  --card:                 220 47% 11%;
+  --card-foreground:      214 25% 98%;
+  --popover:              220 47% 11%;
+  --popover-foreground:   214 25% 98%;
+  --primary:              214 68% 20%;
+  --primary-foreground:   214 25% 98%;
+  --secondary:            217 32% 17%;
+  --secondary-foreground: 214 25% 98%;
+  --muted:                217 32% 17%;
+  --muted-foreground:     215 20% 64%;
+  --accent:               43  65% 54%;
+  --accent-foreground:    222 47%  7%;
+  --destructive:            0 79% 61%;
+  --destructive-foreground: 214 25% 98%;
+  --border:               216 32% 21%;
+  --input:                216 32% 21%;
+  --ring:                  43 65% 54%;
+  --radius:               0.5rem;
+}
+
+@layer base {
   * { @apply border-border; }
   body {
-    @apply bg-background text-foreground;
-    background-color: #0A0F1E;
-    color: #F8FAFC;
+    background: var(--bg-app);
+    color: var(--text-primary);
+    font-family: var(--font-inter, 'Inter'), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-.alsham-bg { background: #0A0F1E; }
-.alsham-card { background: #1B2A4A; }
-.text-gold { color: #C9A84C; }
-.border-gold { border-color: #C9A84C; }
-
-.score-gauge {
-  stroke-dasharray: 251;
-  stroke-dashoffset: 251;
-  animation: gauge-fill 1.2s ease-out forwards;
-  transform-origin: center;
-  transform: rotate(-90deg);
+/* ============================================================
+   MONOSPACE RITUAL — only technical forensic data
+   ============================================================ */
+code, pre,
+.mono, .cid, .hash, .score-value, .normative-code {
+  font-family: var(--font-mono, 'IBM Plex Mono'), 'Courier New', monospace;
 }
 
-@keyframes gauge-fill {
-  to { stroke-dashoffset: var(--offset, 0); }
+/* ============================================================
+   RADIAL GLOW FX
+   ============================================================ */
+.glow-blue { background: radial-gradient(ellipse at 60% 0%,   var(--glow-blue), transparent 70%); }
+.glow-gold { background: radial-gradient(ellipse at 40% 100%, var(--glow-gold), transparent 70%); }
+
+/* ============================================================
+   PANEL PRIMITIVES (border-radius tokens from dossier)
+   ============================================================ */
+.panel       { background: var(--surface-600); border: 1px solid var(--border-strong); border-radius: 20px; }
+.panel-inner { background: var(--surface-800); border: 1px solid var(--border-soft);   border-radius: 16px; }
+.panel-deep  { background: var(--ink-950);     border: 1px solid var(--border-soft);   border-radius: 12px; }
+
+/* ============================================================
+   STATUS SURFACE BACKGROUNDS
+   ============================================================ */
+.bg-danger-sf  { background: var(--surface-danger);  border: 1px solid rgba(225, 84,  84,  0.30); border-radius: 12px; }
+.bg-warning-sf { background: var(--surface-warning); border: 1px solid rgba(215, 155, 47,  0.30); border-radius: 12px; }
+.bg-success-sf { background: var(--surface-success); border: 1px solid rgba(24,  178, 107, 0.30); border-radius: 12px; }
+
+/* ============================================================
+   3-COLUMN ANALYZE GRID
+   ============================================================ */
+.analyze-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr 240px;
+  min-height: calc(100vh - 64px);
+}
+.analyze-col { border-right: 1px solid var(--border-soft); }
+@media (max-width: 1200px) {
+  .analyze-grid { grid-template-columns: 260px 1fr; }
+  .analyze-right-col { display: none; }
+}
+@media (max-width: 880px) {
+  .analyze-grid { grid-template-columns: 1fr; }
+  .analyze-left-col { display: none; }
 }
 
-.paragraph-bar {
-  transition: width 0.8s ease-out;
-}
-
-.animate-fade-in {
-  animation: fade-in 0.4s ease-out forwards;
-}
-
+/* ============================================================
+   MOTION
+   ============================================================ */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes gauge-fill { to { stroke-dashoffset: var(--gauge-target, 0); } }
+
+.animate-fade-in  { animation: fade-in 220ms ease-out forwards; }
+.animate-spin     { animation: spin 1s linear infinite; }
+.score-gauge-arc  {
+  stroke-dasharray:  var(--gauge-circumference, 502);
+  stroke-dashoffset: var(--gauge-circumference, 502);
+  animation: gauge-fill 700ms cubic-bezier(0.4,0,0.2,1) forwards;
+}
+
+/* ============================================================
+   VERIFY CERTIFICATE
+   ============================================================ */
+.cert-verified { color: var(--status-success); }
+.cert-fraud    { color: var(--status-danger); }
+.cert-border   { border: 1px solid color-mix(in srgb, var(--brand-gold) 35%, transparent); }
