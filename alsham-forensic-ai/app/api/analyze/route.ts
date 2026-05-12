@@ -149,7 +149,7 @@ export async function POST(req: NextRequest) {
     if (lockKey) releaseLock(lockKey)
     console.error('[ANALYZE ERROR]', err)
     if (err && typeof err === 'object' && 'name' in err && err.name === 'ZodError') {
-      return NextResponse.json({ error: 'VALIDATION_ERROR', details: (err as { errors: unknown }).errors }, { status: 400 })
+      return NextResponse.json({ error: 'VALIDATION_ERROR', details: (err as unknown as { errors: unknown }).errors }, { status: 400 })
     }
     return NextResponse.json({ error: 'ANALYSIS_FAILED', message: 'Erro interno na análise forense.' }, { status: 500 })
   }
