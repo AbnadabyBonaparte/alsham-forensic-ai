@@ -24,13 +24,13 @@ export async function POST(req: NextRequest) {
 
   const supabase = await createClient()
 
-  // Log event
-  await supabase.from('stripe_events').insert({
+  // Log event (ignore duplicate webhook deliveries)
+  await supabase.from('stripe_events').upsert({
     id: event.id,
     type: event.type,
     payload: event.data.object as unknown as Record<string, unknown>,
     processed: false,
-  }).onConflict('id').ignore()
+  }, { onConflict: 'id', ignoreDuplicates: true })
 
   switch (event.type) {
     case 'customer.subscription.created':
