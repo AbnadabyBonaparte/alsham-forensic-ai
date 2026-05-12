@@ -47,9 +47,9 @@ export default function SignupPage() {
   if (success) {
     return (
       <div style={{ textAlign: 'center', maxWidth: 420 }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>&#10003;</div>
-        <h2 style={{ color: '#16A34A', marginBottom: 8 }}>Conta criada!</h2>
-        <p style={{ color: '#94A3B8' }}>Verifique seu e-mail para confirmar a conta e começar a analisar.</p>
+        <div style={{ fontSize: 48, marginBottom: 16, color: 'var(--status-success)' }}>✓</div>
+        <h2 style={{ color: 'var(--status-success)', marginBottom: 8 }}>Conta criada!</h2>
+        <p style={{ color: 'var(--text-secondary)' }}>Verifique seu e-mail para confirmar a conta e começar a analisar.</p>
       </div>
     )
   }
@@ -57,29 +57,29 @@ export default function SignupPage() {
   return (
     <div style={{ width: '100%', maxWidth: 420 }}>
       <div style={{ textAlign: 'center', marginBottom: 32 }}>
-        <div style={{ fontSize: 10, letterSpacing: 4, color: '#C9A84C', marginBottom: 8 }}>ALSHAM FORENSIC AI</div>
-        <h1 style={{ fontSize: 24, fontWeight: 700, color: '#F8FAFC' }}>Criar conta gratuita</h1>
-        <p style={{ color: '#94A3B8', marginTop: 8, fontSize: 14 }}>
+        <div style={{ fontSize: 10, letterSpacing: 4, color: 'var(--brand-gold)', marginBottom: 8 }}>ALSHAM FORENSIC AI</div>
+        <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)' }}>Criar conta gratuita</h1>
+        <p style={{ color: 'var(--text-secondary)', marginTop: 8, fontSize: 14 }}>
           Já tem conta?{' '}
-          <Link href="/login" style={{ color: '#C9A84C', textDecoration: 'none' }}>Entrar</Link>
+          <Link href="/login" style={{ color: 'var(--brand-gold)', textDecoration: 'none' }}>Entrar</Link>
         </p>
       </div>
 
-      <div style={{ background: '#1B2A4A', borderRadius: 16, padding: 32, border: '1px solid #2D3A56' }}>
+      <div style={{ background: 'var(--surface-600)', borderRadius: 16, padding: 32, border: '1px solid var(--border-strong)' }}>
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <Label htmlFor="name" style={{ color: '#94A3B8', fontSize: 13 }}>Nome completo</Label>
+            <Label htmlFor="name" style={{ color: 'var(--text-secondary)', fontSize: 13 }}>Nome completo</Label>
             <Input
               id="name"
               value={name}
               onChange={e => setName(e.target.value)}
               required
               placeholder="Seu nome"
-              style={{ background: '#0A0F1E', border: '1px solid #2D3A56', color: '#F8FAFC', marginTop: 6 }}
+              style={{ background: 'var(--ink-950)', border: '1px solid var(--border-strong)', color: 'var(--text-primary)', marginTop: 6 }}
             />
           </div>
           <div>
-            <Label htmlFor="email" style={{ color: '#94A3B8', fontSize: 13 }}>E-mail institucional</Label>
+            <Label htmlFor="email" style={{ color: 'var(--text-secondary)', fontSize: 13 }}>E-mail institucional</Label>
             <Input
               id="email"
               type="email"
@@ -87,11 +87,11 @@ export default function SignupPage() {
               onChange={e => setEmail(e.target.value)}
               required
               placeholder="seu@email.com"
-              style={{ background: '#0A0F1E', border: '1px solid #2D3A56', color: '#F8FAFC', marginTop: 6 }}
+              style={{ background: 'var(--ink-950)', border: '1px solid var(--border-strong)', color: 'var(--text-primary)', marginTop: 6 }}
             />
           </div>
           <div>
-            <Label htmlFor="password" style={{ color: '#94A3B8', fontSize: 13 }}>Senha (mín. 8 caracteres)</Label>
+            <Label htmlFor="password" style={{ color: 'var(--text-secondary)', fontSize: 13 }}>Senha (mín. 8 caracteres)</Label>
             <Input
               id="password"
               type="password"
@@ -100,22 +100,22 @@ export default function SignupPage() {
               required
               minLength={8}
               placeholder="Crie uma senha segura"
-              style={{ background: '#0A0F1E', border: '1px solid #2D3A56', color: '#F8FAFC', marginTop: 6 }}
+              style={{ background: 'var(--ink-950)', border: '1px solid var(--border-strong)', color: 'var(--text-primary)', marginTop: 6 }}
             />
           </div>
           {error && (
-            <div style={{ background: '#7F1D1D', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#FCA5A5' }}>
+            <div style={{ background: 'var(--surface-danger)', border: '1px solid var(--status-danger)', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: 'var(--status-danger)' }}>
               {error}
             </div>
           )}
           <Button
             type="submit"
             disabled={loading}
-            style={{ background: '#C9A84C', color: '#0A0F1E', fontWeight: 700, marginTop: 8 }}
+            style={{ background: 'var(--brand-gold)', color: 'var(--ink-950)', fontWeight: 700, marginTop: 8 }}
           >
             {loading ? 'Criando conta...' : 'Criar Conta Gratuita'}
           </Button>
-          <p style={{ fontSize: 11, color: '#64748B', textAlign: 'center' }}>
+          <p style={{ fontSize: 11, color: 'var(--text-muted)', textAlign: 'center' }}>
             Ao criar conta, você concorda com nossos termos de uso.
           </p>
         </form>

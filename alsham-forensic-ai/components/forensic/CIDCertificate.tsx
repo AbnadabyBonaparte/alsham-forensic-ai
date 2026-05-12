@@ -43,37 +43,37 @@ export function CIDCertificate({ cidCode, textHash, analysisId, hasPdfAccess }: 
 
   return (
     <div style={{
-      background: 'linear-gradient(135deg, #1B2A4A 0%, #0A0F1E 100%)',
+      background: 'linear-gradient(135deg, var(--surface-600) 0%, var(--ink-950) 100%)',
       borderRadius: 16, padding: 24,
-      border: '1px solid #C9A84C44',
+      border: '1px solid rgba(199,162,74,0.27)',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-        <Shield size={20} color="#C9A84C" />
-        <div style={{ fontSize: 10, letterSpacing: 3, color: '#C9A84C', fontWeight: 700 }}>CERTIFICADO DE INTEGRIDADE DIGITAL</div>
+        <Shield size={20} color="var(--brand-gold)" />
+        <div style={{ fontSize: 10, letterSpacing: 3, color: 'var(--brand-gold)', fontWeight: 700 }}>CERTIFICADO DE INTEGRIDADE DIGITAL</div>
       </div>
 
       <div style={{ textAlign: 'center', marginBottom: 20 }}>
-        <div style={{ fontSize: 10, letterSpacing: 3, color: '#94A3B8', marginBottom: 8 }}>CÓDIGO CID</div>
-        <div style={{ fontSize: 22, fontWeight: 800, color: '#C9A84C', letterSpacing: 2, fontFamily: 'monospace' }}>{cidCode}</div>
+        <div style={{ fontSize: 10, letterSpacing: 3, color: 'var(--text-secondary)', marginBottom: 8 }}>CÓDIGO CID</div>
+        <div className="cid" style={{ fontSize: 22, fontWeight: 800, color: 'var(--brand-gold)', letterSpacing: 2 }}>{cidCode}</div>
       </div>
 
-      <div style={{ background: '#0A0F1E', borderRadius: 8, padding: 12, marginBottom: 16 }}>
+      <div style={{ background: 'var(--ink-950)', borderRadius: 8, padding: 12, marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-          <Hash size={12} color="#C9A84C" />
-          <span style={{ fontSize: 10, letterSpacing: 2, color: '#C9A84C' }}>SHA-256</span>
+          <Hash size={12} color="var(--brand-gold)" />
+          <span style={{ fontSize: 10, letterSpacing: 2, color: 'var(--brand-gold)' }}>SHA-256</span>
         </div>
-        <div style={{ fontSize: 10, color: '#64748B', fontFamily: 'monospace', wordBreak: 'break-all', lineHeight: 1.6 }}>
+        <div className="hash" style={{ fontSize: 10, color: 'var(--text-muted)', wordBreak: 'break-all', lineHeight: 1.6 }}>
           {textHash}
         </div>
       </div>
 
       <div style={{ marginBottom: 16 }}>
-        <div style={{ fontSize: 10, color: '#64748B', marginBottom: 4 }}>Link de verificação pública:</div>
+        <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 4 }}>Link de verificação pública:</div>
         <a
           href={verifyUrl}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ fontSize: 12, color: '#C9A84C', textDecoration: 'none', wordBreak: 'break-all' }}
+          style={{ fontSize: 12, color: 'var(--brand-gold)', textDecoration: 'none', wordBreak: 'break-all' }}
         >
           {verifyUrl}
         </a>
@@ -83,14 +83,14 @@ export function CIDCertificate({ cidCode, textHash, analysisId, hasPdfAccess }: 
         <Button
           onClick={downloadPDF}
           disabled={downloading || !analysisId}
-          style={{ width: '100%', background: '#C9A84C', color: '#0A0F1E', fontWeight: 700 }}
+          style={{ width: '100%', background: 'var(--brand-gold)', color: 'var(--ink-950)', fontWeight: 700 }}
         >
           <Download size={14} style={{ marginRight: 6 }} />
           {downloading ? 'Gerando PDF...' : 'Baixar Certificado PDF'}
         </Button>
       ) : (
-        <div style={{ textAlign: 'center', fontSize: 12, color: '#64748B' }}>
-          <a href="/pricing" style={{ color: '#C9A84C' }}>Plano Profissional</a> inclui download do PDF
+        <div style={{ textAlign: 'center', fontSize: 12, color: 'var(--text-muted)' }}>
+          <a href="/pricing" style={{ color: 'var(--brand-gold)' }}>Plano Profissional</a> inclui download do PDF
         </div>
       )}
     </div>

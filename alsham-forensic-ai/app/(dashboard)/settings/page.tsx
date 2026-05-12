@@ -40,48 +40,48 @@ export default function SettingsPage() {
 
   return (
     <div style={{ maxWidth: 600 }}>
-      <h1 style={{ fontSize: 26, fontWeight: 700, marginBottom: 32 }}>Configurações</h1>
+      <h1 style={{ fontSize: 26, fontWeight: 700, marginBottom: 32, color: 'var(--text-primary)' }}>Configurações</h1>
 
-      <div style={{ background: '#1B2A4A', borderRadius: 16, padding: 28, marginBottom: 24, border: '1px solid #2D3A56' }}>
-        <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>Perfil</h2>
+      <div style={{ background: 'var(--surface-600)', borderRadius: 16, padding: 28, marginBottom: 24, border: '1px solid var(--border-strong)' }}>
+        <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20, color: 'var(--text-primary)' }}>Perfil</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <Label style={{ color: '#94A3B8', fontSize: 13 }}>Nome</Label>
+            <Label style={{ color: 'var(--text-secondary)', fontSize: 13 }}>Nome</Label>
             <Input
               value={name}
               onChange={e => setName(e.target.value)}
-              style={{ background: '#0A0F1E', border: '1px solid #2D3A56', color: '#F8FAFC', marginTop: 6 }}
+              style={{ background: 'var(--ink-950)', border: '1px solid var(--border-strong)', color: 'var(--text-primary)', marginTop: 6 }}
             />
           </div>
           <div>
-            <Label style={{ color: '#94A3B8', fontSize: 13 }}>E-mail</Label>
+            <Label style={{ color: 'var(--text-secondary)', fontSize: 13 }}>E-mail</Label>
             <Input
               value={profile?.email ?? ''}
               disabled
-              style={{ background: '#0A0F1E', border: '1px solid #2D3A56', color: '#64748B', marginTop: 6 }}
+              style={{ background: 'var(--ink-950)', border: '1px solid var(--border-strong)', color: 'var(--text-muted)', marginTop: 6 }}
             />
           </div>
-          {msg && <p style={{ fontSize: 13, color: '#16A34A' }}>{msg}</p>}
+          {msg && <p style={{ fontSize: 13, color: 'var(--status-success)' }}>{msg}</p>}
           <Button
             onClick={saveProfile}
             disabled={saving}
-            style={{ background: '#C9A84C', color: '#0A0F1E', fontWeight: 700, alignSelf: 'flex-start' }}
+            style={{ background: 'var(--brand-gold)', color: 'var(--ink-950)', fontWeight: 700, alignSelf: 'flex-start' }}
           >
             {saving ? 'Salvando...' : 'Salvar'}
           </Button>
         </div>
       </div>
 
-      <div style={{ background: '#1B2A4A', borderRadius: 16, padding: 28, border: '1px solid #2D3A56' }}>
-        <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Assinatura</h2>
-        <p style={{ color: '#94A3B8', fontSize: 14, marginBottom: 20 }}>
-          Plano atual: <strong style={{ color: '#C9A84C' }}>{(profile?.plans as Record<string, unknown>)?.name_pt as string ?? 'Gratuito'}</strong>
+      <div style={{ background: 'var(--surface-600)', borderRadius: 16, padding: 28, border: '1px solid var(--border-strong)' }}>
+        <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, color: 'var(--text-primary)' }}>Assinatura</h2>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 20 }}>
+          Plano atual: <strong style={{ color: 'var(--brand-gold)' }}>{(profile?.plans as Record<string, unknown>)?.name_pt as string ?? 'Gratuito'}</strong>
         </p>
         <div style={{ display: 'flex', gap: 12 }}>
           <Button
             onClick={manageSubscription}
             variant="outline"
-            style={{ borderColor: '#C9A84C', color: '#C9A84C' }}
+            style={{ borderColor: 'var(--brand-gold)', color: 'var(--brand-gold)' }}
           >
             Gerenciar Assinatura
           </Button>

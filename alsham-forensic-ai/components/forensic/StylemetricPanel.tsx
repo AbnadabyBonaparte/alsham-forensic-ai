@@ -51,7 +51,7 @@ export function StylemetricPanel({ stylometric }: StylemetricPanelProps) {
 
   return (
     <div>
-      <div style={{ fontSize: 10, letterSpacing: 2, color: '#C9A84C', marginBottom: 12 }}>ANÁLISE ESTILOMÉTRICA</div>
+      <div style={{ fontSize: 10, letterSpacing: 2, color: 'var(--brand-gold)', marginBottom: 12 }}>ANÁLISE ESTILOMÉTRICA</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         {metrics.map(m => {
           const pct = Math.min((m.value / m.max) * 100, 100)
@@ -59,16 +59,16 @@ export function StylemetricPanel({ stylometric }: StylemetricPanelProps) {
           return (
             <div key={m.label}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-                <span style={{ fontSize: 13, color: '#CBD5E1' }}>{m.label}</span>
+                <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{m.label}</span>
                 <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: isGood ? '#16A34A' : '#DC2626' }}>{m.format(m.value)}</span>
-                  <span style={{ fontSize: 10, color: '#64748B', marginLeft: 6 }}>{m.hint}</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: isGood ? 'var(--status-success)' : 'var(--status-danger)' }}>{m.format(m.value)}</span>
+                  <span style={{ fontSize: 10, color: 'var(--text-muted)', marginLeft: 6 }}>{m.hint}</span>
                 </div>
               </div>
-              <div style={{ background: '#0A0F1E', borderRadius: 100, height: 6 }}>
+              <div style={{ background: 'var(--ink-950)', borderRadius: 100, height: 6 }}>
                 <div style={{
                   width: `${pct}%`, height: 6, borderRadius: 100,
-                  background: isGood ? '#16A34A' : '#DC2626',
+                  background: isGood ? 'var(--status-success)' : 'var(--status-danger)',
                   transition: 'width 0.8s ease-out',
                 }} />
               </div>
