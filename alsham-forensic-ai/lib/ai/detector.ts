@@ -5,9 +5,6 @@ import { getInstitutionNormatives } from '@/lib/institutions/normatives'
 import { verifyCitations } from './citation-verifier'
 import { generateCID, hashText } from './crypto'
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-
 const FORENSIC_SYSTEM_PROMPT = (institutionName: string, normatives: string) => `
 You are ALSHAM Forensic AI v1.0 — an elite forensic linguistic analysis engine used by doctoral review boards and Brazilian federal agencies (CNPq, CAPES) to assess academic text integrity.
 
@@ -57,6 +54,8 @@ export async function analyzeText(
   institutionData: { name: string; id: string },
   resubmissionData: { isResubmission: boolean; submissionCount: number; scoreTrend: string }
 ): Promise<Partial<AnalysisResult>> {
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   const normatives: NormativeRow[] = await getInstitutionNormatives(institutionData.id)
   const normativesText = normatives.map(n => `- ${n.code} (${n.document}): ${n.description}`).join('\n')
 
