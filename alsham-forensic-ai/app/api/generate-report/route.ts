@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
 
   const pdfBuffer = await generateCertificatePDF(result, institutionName)
 
-  return new NextResponse(pdfBuffer, {
+  return new NextResponse(pdfBuffer.buffer as ArrayBuffer, {
     headers: {
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename="CID-${analysis.cid_code}.pdf"`,
