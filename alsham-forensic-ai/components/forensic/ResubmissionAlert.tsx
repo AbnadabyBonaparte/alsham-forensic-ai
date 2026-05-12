@@ -16,16 +16,18 @@ export function ResubmissionAlert({ resubmissionData }: ResubmissionAlertProps) 
 
   return (
     <div style={{
-      background: isBypass ? '#7F1D1D18' : '#7C2D1218',
-      border: `1px solid ${isBypass ? '#DC2626' : '#D97706'}`,
+      background: isBypass ? 'var(--surface-danger)' : 'var(--surface-warning)',
+      border: `1px solid ${isBypass ? 'var(--status-danger)' : 'var(--status-warning)'}`,
       borderRadius: 12, padding: 16, display: 'flex', alignItems: 'flex-start', gap: 12,
     }}>
-      {isBypass ? <TrendingDown size={20} color="#DC2626" style={{ marginTop: 2 }} /> : <AlertTriangle size={20} color="#D97706" style={{ marginTop: 2 }} />}
+      {isBypass
+        ? <TrendingDown size={20} color="var(--status-danger)" style={{ marginTop: 2 }} />
+        : <AlertTriangle size={20} color="var(--status-warning)" style={{ marginTop: 2 }} />}
       <div>
-        <div style={{ fontSize: 14, fontWeight: 700, color: isBypass ? '#DC2626' : '#D97706', marginBottom: 4 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: isBypass ? 'var(--status-danger)' : 'var(--status-warning)', marginBottom: 4 }}>
           {isBypass ? '⛔ TENTATIVA DE BURLA DETECTADA' : '⚠️ Texto Resubmetido'}
         </div>
-        <div style={{ fontSize: 13, color: '#94A3B8', lineHeight: 1.5 }}>
+        <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
           {isBypass
             ? `Este texto foi submetido ${resubmissionData.submissionCount} vez(es) anteriormente com score decrescente, indicando tentativa de burlar o sistema. Conforme Art. 36 da Portaria CNPq 2664/2026, a reincidência é circunstância agravante na dosimetria da sanção.`
             : `Este texto já foi analisado ${resubmissionData.submissionCount} vez(es) anteriormente. Histórico registrado para fins de dosimetria.`}

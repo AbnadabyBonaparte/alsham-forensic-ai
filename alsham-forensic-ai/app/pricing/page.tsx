@@ -67,12 +67,12 @@ export default function PricingPage() {
   }
 
   return (
-    <div style={{ background: '#0A0F1E', minHeight: '100vh', padding: '80px 24px' }}>
+    <div style={{ background: 'var(--ink-950)', minHeight: '100vh', padding: '80px 24px' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: 60 }}>
-          <div style={{ fontSize: 10, letterSpacing: 4, color: '#C9A84C', marginBottom: 12 }}>PLANOS E PRECOS</div>
-          <h1 style={{ fontSize: 40, fontWeight: 800, color: '#F8FAFC', marginBottom: 16 }}>Escolha seu plano</h1>
-          <p style={{ color: '#94A3B8', fontSize: 16 }}>Comece gratuitamente. Faça upgrade quando precisar de mais.</p>
+          <div style={{ fontSize: 10, letterSpacing: 4, color: 'var(--brand-gold)', marginBottom: 12 }}>PLANOS E PREÇOS</div>
+          <h1 style={{ fontSize: 40, fontWeight: 800, color: 'var(--text-primary)', marginBottom: 16 }}>Escolha seu plano</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 16 }}>Comece gratuitamente. Faça upgrade quando precisar de mais.</p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20 }}>
@@ -80,29 +80,29 @@ export default function PricingPage() {
             <div
               key={plan.id}
               style={{
-                background: plan.highlight ? '#1B2A4A' : '#111827',
+                background: plan.highlight ? 'var(--surface-600)' : 'var(--surface-800)',
                 borderRadius: 16,
                 padding: 28,
-                border: plan.highlight ? '2px solid #C9A84C' : '1px solid #2D3A56',
+                border: plan.highlight ? '2px solid var(--brand-gold)' : '1px solid var(--border-strong)',
                 position: 'relative',
               }}
             >
               {plan.highlight && (
                 <div style={{
                   position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
-                  background: '#C9A84C', color: '#0A0F1E', fontSize: 10, fontWeight: 800,
+                  background: 'var(--brand-gold)', color: 'var(--ink-950)', fontSize: 10, fontWeight: 800,
                   letterSpacing: 2, padding: '4px 14px', borderRadius: 100,
                 }}>MAIS POPULAR</div>
               )}
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#C9A84C', marginBottom: 8 }}>{plan.name}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--brand-gold)', marginBottom: 8 }}>{plan.name}</div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 20 }}>
-                <span style={{ fontSize: 32, fontWeight: 800, color: '#F8FAFC' }}>{plan.price}</span>
-                <span style={{ fontSize: 14, color: '#94A3B8' }}>{plan.period}</span>
+                <span style={{ fontSize: 32, fontWeight: 800, color: 'var(--text-primary)' }}>{plan.price}</span>
+                <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>{plan.period}</span>
               </div>
               <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px' }}>
                 {plan.features.map(f => (
-                  <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, fontSize: 13, color: '#CBD5E1' }}>
-                    <CheckCircle size={14} color="#16A34A" />
+                  <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, fontSize: 13, color: 'var(--text-secondary)' }}>
+                    <CheckCircle size={14} color="var(--status-success)" />
                     {f}
                   </li>
                 ))}
@@ -112,9 +112,9 @@ export default function PricingPage() {
                 disabled={loading === plan.planKey}
                 style={{
                   width: '100%',
-                  background: plan.highlight ? '#C9A84C' : 'transparent',
-                  color: plan.highlight ? '#0A0F1E' : '#C9A84C',
-                  border: plan.highlight ? 'none' : '1px solid #C9A84C',
+                  background: plan.highlight ? 'var(--brand-gold)' : 'transparent',
+                  color: plan.highlight ? 'var(--ink-950)' : 'var(--brand-gold)',
+                  border: plan.highlight ? 'none' : '1px solid var(--brand-gold)',
                   fontWeight: 700,
                 }}
               >
