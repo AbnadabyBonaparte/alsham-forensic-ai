@@ -201,6 +201,42 @@ CREATE TABLE analyses (
 CREATE INDEX idx_analyses_text_hash ON analyses(text_hash);
 CREATE INDEX idx_analyses_user_id ON analyses(user_id);
 CREATE INDEX idx_analyses_created_at ON analyses(created_at DESC);
+CREATE INDEX idx_analyses_cid_code ON analyses(cid_code);
+
+-- Increment the caller's monthly analysis counter (called from app/api/analyze/route.ts).
+-- SECURITY DEFINER so it runs regardless of the profiles RLS policy.
+CREATE OR REPLACE FUNCTION increment_analyses_count(p_user_id UUID) RETURNS void AS $$
+  UPDATE profiles
+  SET analyses_used_this_month = analyses_used_this_month + 1,
+      updated_at = NOW()
+  WHERE id = p_user_id;
+$$ LANGUAGE sql SECURITY DEFINER;
+
+-- Public verification lookup by CID (called from app/verify/[cid]/page.tsx).
+-- SECURITY DEFINER to bypass RLS, but exposes ONLY public-safe columns.
+-- The document excerpt (text_preview) is NEVER returned. The SHA-256 text_hash
+-- is intentionally included: it is a one-way digest, publicly advertised as
+-- "Hash SHA-256 público e verificável", and required by the client-side
+-- document-authenticity check on the verification page.
+CREATE OR REPLACE FUNCTION get_public_analysis_by_cid(p_cid TEXT)
+RETURNS jsonb AS $$
+  SELECT jsonb_build_object(
+    'cid_code',           a.cid_code,
+    'overall_ai_score',   a.overall_ai_score,
+    'verdict',            a.verdict,
+    'detected_model',     a.detected_model,
+    'compliance_verdict', a.compliance_verdict,
+    'compliance_risk',    a.compliance_risk,
+    'institution_name',   COALESCE(i.name_short, i.name, '—'),
+    'analysis_engine',    a.analysis_engine,
+    'text_hash',          a.text_hash,
+    'created_at',         a.created_at
+  )
+  FROM analyses a
+  LEFT JOIN institutions i ON i.id = a.institution_id
+  WHERE a.cid_code = p_cid
+  LIMIT 1;
+$$ LANGUAGE sql SECURITY DEFINER;
 
 -- ============================================================
 -- RESUBMISSION DETECTION (Dosimetria de Sanção)

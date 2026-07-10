@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { Shield, Download, Hash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Disclaimer } from './Disclaimer'
 
 interface CIDCertificateProps {
   cidCode: string
@@ -93,6 +94,10 @@ export function CIDCertificate({ cidCode, textHash, analysisId, hasPdfAccess }: 
           <a href="/pricing" style={{ color: 'var(--brand-gold)' }}>Plano Profissional</a> inclui download do PDF
         </div>
       )}
+
+      <div style={{ marginTop: 16 }}>
+        <Disclaimer compact />
+      </div>
     </div>
   )
 }

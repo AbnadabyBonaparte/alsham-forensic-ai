@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Shield, Copy, ExternalLink, CheckCircle, XCircle } from 'lucide-react'
 import { verdictColor, verdictLabel, formatDate } from '@/lib/utils'
 import { CidSeal, HashVerification, NormativeShield } from '@/components/icons'
+import { Disclaimer } from './Disclaimer'
 
 interface VerifyData {
   cid_code: string
@@ -197,6 +198,11 @@ export function VerifyResult({ data, cid }: { data: Record<string, string | numb
         >
           <ExternalLink size={14} /> Abrir página
         </a>
+      </div>
+
+      {/* ─── DISCLAIMER ─── */}
+      <div style={{ marginBottom: 24 }}>
+        <Disclaimer />
       </div>
 
       {/* ─── FOOTER ─── */}

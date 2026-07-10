@@ -33,10 +33,10 @@ const COMPARISON = [
 ]
 
 const FAQ = [
-  { q: 'O resultado é juridicamente válido?', a: 'O laudo cita artigos específicos de portarias federais (CNPq) e resoluções institucionais. O CID com hash SHA-256 serve como evidência em processo administrativo.' },
-  { q: 'Falsos positivos são possíveis?',      a: 'Sim — todo sistema de detecção tem taxa de erro. O ALSHAM usa ensemble de dois LLMs + estilometria para minimizar isso. Sempre revisar com o contexto do autor.' },
+  { q: 'O resultado tem valor jurídico?', a: 'O laudo cita artigos específicos de portarias federais (CNPq) e resoluções institucionais, e o CID com hash SHA-256 pode servir como evidência de apoio em processo administrativo — sempre sujeita a revisão humana. É um resultado probabilístico, não substitui perícia oficial nem constitui prova pericial definitiva.' },
+  { q: 'Falsos positivos são possíveis?',      a: 'Sim — todo sistema de detecção tem taxa de erro. O ALSHAM usa ensemble de dois LLMs + estilometria para reduzir esse risco, mas nenhum resultado é definitivo. Sempre revise com o contexto do autor.' },
   { q: 'Os textos são armazenados?',           a: 'Apenas o hash SHA-256 e a prévia (200 chars) são salvos para emissão do CID. O texto completo nunca é retido.' },
-  { q: 'Funciona para outras línguas?',        a: 'Sim. O motor Claude suporta português, inglês e espanhol com alta precisão.' },
+  { q: 'Funciona para outras línguas?',        a: 'Sim. O motor Claude analisa português, inglês e espanhol, sempre com a mesma ressalva de margem de erro.' },
 ]
 
 export default function LandingPage() {
