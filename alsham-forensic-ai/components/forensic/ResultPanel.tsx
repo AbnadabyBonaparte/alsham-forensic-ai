@@ -9,6 +9,7 @@ import { CompliancePanel } from './CompliancePanel'
 import { CIDCertificate } from './CIDCertificate'
 import { ResubmissionAlert } from './ResubmissionAlert'
 import { ForensicOpinion } from './ForensicOpinion'
+import { Disclaimer } from './Disclaimer'
 
 interface ResultPanelProps {
   result: AnalysisResult
@@ -96,6 +97,8 @@ export function ResultPanel({ result, hasPdfAccess }: ResultPanelProps) {
           <CitationPanel citations={result.citations} />
         </Section>
       )}
+
+      <Disclaimer />
     </div>
   )
 }
