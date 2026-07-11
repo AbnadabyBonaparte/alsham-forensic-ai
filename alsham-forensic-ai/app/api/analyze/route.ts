@@ -6,6 +6,16 @@ import { createClient } from '@/lib/supabase/server'
 import { analyzeText } from '@/lib/ai/detector'
 import { hashText } from '@/lib/ai/crypto'
 import { acquireLock, releaseLock } from '@/lib/analysis-lock'
+import {
+  ANON_ANALYSIS_LIMIT,
+  ANON_COOKIE_MAX_AGE,
+  ANON_COOKIE_NAME,
+  anonRemaining,
+  getAnonSecret,
+  isAnonLimitReached,
+  parseAnonCount,
+  serializeAnonCount,
+} from '@/lib/anon-limit'
 
 const AnalyzeSchema = z.object({
   text: z.string().min(80).max(50000),
@@ -22,6 +32,8 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json() as unknown
     const input = AnalyzeSchema.parse(body)
+
+    const anonSecret = getAnonSecret()
 
     lockKey = `${user?.id ?? req.headers.get('x-forwarded-for') ?? 'anon'}-${Math.floor(Date.now() / 1000)}`
     if (!acquireLock(lockKey)) {
@@ -56,13 +68,29 @@ export async function POST(req: NextRequest) {
         }
       }
     } else {
-      // Anonymous users: enforce 3-analysis limit via simple count check would need cookie
-      // For now, allow with text length cap of 2000
+      // Anonymous users: keep the text-length teaser cap...
       if (input.text.length > 2000) {
         releaseLock(lockKey)
         return NextResponse.json(
           { error: 'TEXT_TOO_LONG', message: 'Crie uma conta gratuita para analisar textos maiores.' },
           { status: 400 }
+        )
+      }
+      // ...and enforce a real free-analysis cap via a signed, httpOnly cookie.
+      // Once the visitor has used ANON_ANALYSIS_LIMIT free analyses we return a
+      // paywall response (402) the frontend renders as a "sign up to continue" CTA.
+      const usedFree = parseAnonCount(req.cookies.get(ANON_COOKIE_NAME)?.value, anonSecret)
+      if (isAnonLimitReached(usedFree)) {
+        releaseLock(lockKey)
+        return NextResponse.json(
+          {
+            error: 'ANON_LIMIT_REACHED',
+            message: 'Você usou suas análises gratuitas. Crie uma conta para continuar.',
+            limit: ANON_ANALYSIS_LIMIT,
+            used: usedFree,
+            remaining: 0,
+          },
+          { status: 402 }
         )
       }
     }
@@ -146,7 +174,25 @@ export async function POST(req: NextRequest) {
     }
 
     releaseLock(lockKey)
-    return NextResponse.json({ ...result, id: savedAnalysis?.id })
+
+    const response = NextResponse.json({ ...result, id: savedAnalysis?.id })
+
+    // For anonymous visitors, persist the incremented free-usage counter in a
+    // signed, httpOnly cookie so the paywall triggers once the free tier is used up.
+    if (!user) {
+      const usedFree = parseAnonCount(req.cookies.get(ANON_COOKIE_NAME)?.value, anonSecret)
+      const nextCount = usedFree + 1
+      response.cookies.set(ANON_COOKIE_NAME, serializeAnonCount(nextCount, anonSecret), {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
+        maxAge: ANON_COOKIE_MAX_AGE,
+      })
+      response.headers.set('X-Anon-Analyses-Remaining', String(anonRemaining(nextCount)))
+    }
+
+    return response
   } catch (err: unknown) {
     if (lockKey) releaseLock(lockKey)
     console.error('[ANALYZE ERROR]', err)
