@@ -1,0 +1,21 @@
+{
+  "brand": "alsham-forensic-ai",
+  "palette": ["#08111F obsidian", "#C7A24A brand-gold", "#5B8CFF forensic-blue"],
+  "pieces": [
+    {
+      "name": "hero",
+      "aspect": "16:9",
+      "prompt": "Cinematic dark editorial hero for a forensic AI-text authenticity platform. A luminous legal certificate document sealed with a molten gold wax seal dissolving into a network of glowing verification lines and floating SHA-256 hexadecimal light, over deep obsidian navy-black, volumetric golden rim light with faint cobalt-blue accents, chain-of-custody data threads, museum-grade luxury, ultra-detailed, dramatic low-key lighting, premium forensic aesthetic, no text, no logo, no watermark, no words"
+    },
+    {
+      "name": "seal",
+      "aspect": "1:1",
+      "prompt": "Macro shot of a gold wax certification seal embossed with abstract concentric guilloche security engraving, cracking open to reveal glowing golden data particles and thin verification light-lines, obsidian black background, volumetric gold glow, forensic authenticity motif, cinematic, ultra-detailed, no text, no logo, no watermark, no words"
+    },
+    {
+      "name": "forensic-data",
+      "aspect": "3:2",
+      "prompt": "Abstract forensic data visualization: streams of golden hexadecimal hash characters and stylometric waveform lines flowing across a dark obsidian field, fingerprint-like ridge patterns forming from light, faint cobalt-blue nodes, deep depth of field, cinematic volumetric glow, editorial premium tech aesthetic, no text, no logo, no watermark, no words"
+    }
+  ]
+}

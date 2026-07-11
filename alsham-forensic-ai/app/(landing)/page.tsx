@@ -1,10 +1,14 @@
 import Link from 'next/link'
 import { CheckCircle, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { HeroArt } from '@/components/landing/HeroArt'
 import {
   NormativeShield, CidSeal, HashVerification,
   BibliographicCheck, RiskEscalation,
+  StylometricScan, AiFingerprint, ForensicReport,
 } from '@/components/icons'
+
+const HOW_ICONS = [AiFingerprint, NormativeShield, StylometricScan, ForensicReport, CidSeal]
 
 const TRUST_ITEMS = [
   { Icon: NormativeShield, label: 'Normativas CNPq 2664/2026 e UFPB 57/2025' },
@@ -43,61 +47,93 @@ export default function LandingPage() {
   return (
     <div style={{ background: 'var(--bg-app)', color: 'var(--text-primary)', minHeight: '100vh' }}>
 
-      {/* ─────────── HERO ─────────── */}
-      <section className="glow-blue" style={{ maxWidth: 1100, margin: '0 auto', padding: '100px 24px 80px', textAlign: 'center' }}>
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          background: 'var(--surface-700)', border: '1px solid color-mix(in srgb, var(--brand-gold) 30%, transparent)',
-          borderRadius: 999, padding: '6px 18px', marginBottom: 28,
-        }}>
-          <NormativeShield size={13} style={{ color: 'var(--brand-gold)' }} />
-          <span style={{ fontSize: 11, color: 'var(--brand-gold)', letterSpacing: '0.15em', fontFamily: 'var(--font-mono)' }}>
-            CONFORMIDADE CNPq 2664/2026 · UFPB 57/2025
-          </span>
+      {/* ─────────── HERO (cinematic) ─────────── */}
+      <section className="hero-cinematic" style={{ minHeight: '92vh', display: 'flex', alignItems: 'center', padding: '132px 24px 96px' }}>
+        {/* layered depth: focal art → glow → vignette → grain (last two via ::after / .hero-vignette) */}
+        <HeroArt />
+        <div className="hero-glow" aria-hidden />
+        <div className="hero-vignette" aria-hidden />
+
+        <div style={{ position: 'relative', zIndex: 4, maxWidth: 940, margin: '0 auto', textAlign: 'center' }}>
+          <div className="rise rise-1" style={{
+            display: 'inline-flex', alignItems: 'center', gap: 9,
+            background: 'color-mix(in srgb, var(--surface-700) 70%, transparent)',
+            border: '1px solid color-mix(in srgb, var(--brand-gold) 34%, transparent)',
+            backdropFilter: 'blur(8px)',
+            borderRadius: 999, padding: '7px 16px', marginBottom: 30,
+            boxShadow: '0 8px 30px -18px rgba(199,162,74,0.5)',
+          }}>
+            <span style={{ display: 'inline-flex', width: 7, height: 7, borderRadius: 999, background: 'var(--brand-gold)', boxShadow: '0 0 10px var(--brand-gold)' }} />
+            <span style={{ fontSize: 10.5, color: 'var(--brand-gold)', letterSpacing: '0.2em', fontFamily: 'var(--font-mono)' }}>
+              CONFORMIDADE CNPq 2664/2026 · UFPB 57/2025
+            </span>
+          </div>
+
+          <h1 className="rise rise-2" style={{
+            fontSize: 'clamp(38px, 6vw, 74px)', fontWeight: 700,
+            lineHeight: 1.04, letterSpacing: '-0.035em', marginBottom: 26,
+            color: 'var(--text-primary)',
+          }}>
+            A auditoria forense de IA<br />
+            <span className="text-gold-gradient">que universidades conseguem defender.</span>
+          </h1>
+
+          <p className="rise rise-3" style={{
+            fontSize: 'clamp(16px, 1.7vw, 20px)', color: 'var(--text-secondary)', maxWidth: 640,
+            margin: '0 auto 40px', lineHeight: 1.65,
+          }}>
+            Detecte texto sintético, valide citações, aplique normativas reais
+            e emita um Certificado de Integridade Digital verificável.
+          </p>
+
+          <div className="rise rise-4" style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/signup">
+              <button style={{
+                background: 'linear-gradient(180deg, var(--gold-hover), var(--brand-gold))', color: 'var(--ink-950)',
+                fontWeight: 700, fontSize: 15, padding: '14px 30px',
+                borderRadius: 12, border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', gap: 8,
+                boxShadow: '0 16px 40px -16px rgba(199,162,74,0.6)',
+              }}>
+                Analisar gratuitamente <ArrowRight size={16} />
+              </button>
+            </Link>
+            <a href="mailto:comercial@alshamglobal.com.br">
+              <button style={{
+                background: 'color-mix(in srgb, var(--surface-700) 55%, transparent)', color: 'var(--brand-gold)',
+                fontWeight: 600, fontSize: 15, padding: '14px 30px',
+                borderRadius: 12, border: '1px solid color-mix(in srgb, var(--brand-gold) 40%, transparent)',
+                backdropFilter: 'blur(8px)', cursor: 'pointer',
+              }}>
+                Solicitar plano institucional
+              </button>
+            </a>
+          </div>
+
+          <p className="rise rise-5" style={{ marginTop: 18, fontSize: 12, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em' }}>
+            Sem cartão · 3 análises gratuitas · Resultado em &lt;30 segundos
+          </p>
+
+          {/* forensic proof chips — grounded, no fabricated metrics */}
+          <div className="rise rise-5" style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', marginTop: 42 }}>
+            {[
+              { Icon: HashVerification,   label: 'SHA-256 público' },
+              { Icon: CidSeal,            label: 'Certificado CID' },
+              { Icon: BibliographicCheck, label: 'Citações verificadas' },
+              { Icon: RiskEscalation,     label: 'Dosimetria de sanção' },
+            ].map(({ Icon, label }) => (
+              <div key={label} style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                background: 'color-mix(in srgb, var(--surface-800) 65%, transparent)',
+                border: '1px solid var(--border-soft)', backdropFilter: 'blur(6px)',
+                borderRadius: 999, padding: '8px 15px',
+              }}>
+                <Icon size={15} style={{ color: 'var(--brand-gold)', flexShrink: 0 }} />
+                <span style={{ fontSize: 12.5, color: 'var(--text-secondary)' }}>{label}</span>
+              </div>
+            ))}
+          </div>
         </div>
-
-        <h1 style={{
-          fontSize: 'clamp(32px, 5vw, 62px)', fontWeight: 700,
-          lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: 24,
-          color: 'var(--text-primary)',
-        }}>
-          A auditoria forense de IA<br />
-          <span style={{ color: 'var(--brand-gold)' }}>que universidades conseguem defender.</span>
-        </h1>
-
-        <p style={{
-          fontSize: 18, color: 'var(--text-secondary)', maxWidth: 680,
-          margin: '0 auto 44px', lineHeight: 1.7,
-        }}>
-          Detecte texto sintético, valide citações, aplique normativas reais
-          e emita um Certificado de Integridade Digital verificável.
-        </p>
-
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/signup">
-            <button style={{
-              background: 'var(--brand-gold)', color: 'var(--ink-950)',
-              fontWeight: 700, fontSize: 15, padding: '13px 28px',
-              borderRadius: 10, border: 'none', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: 8,
-            }}>
-              Analisar gratuitamente <ArrowRight size={16} />
-            </button>
-          </Link>
-          <a href="mailto:comercial@alshamglobal.com.br">
-            <button style={{
-              background: 'transparent', color: 'var(--brand-gold)',
-              fontWeight: 600, fontSize: 15, padding: '13px 28px',
-              borderRadius: 10, border: '1px solid color-mix(in srgb, var(--brand-gold) 40%, transparent)',
-              cursor: 'pointer',
-            }}>
-              Solicitar plano institucional
-            </button>
-          </a>
-        </div>
-        <p style={{ marginTop: 16, fontSize: 12, color: 'var(--text-muted)' }}>
-          Sem cartão · 3 análises gratuitas · Resultado em &lt;30 segundos
-        </p>
       </section>
 
       {/* ─────────── TRUST RAIL ─────────── */}
@@ -144,35 +180,51 @@ export default function LandingPage() {
       </section>
 
       {/* ─────────── COMO FUNCIONA ─────────── */}
-      <section style={{ maxWidth: 1100, margin: '0 auto 80px', padding: '0 24px' }}>
-        <h2 style={{ fontSize: 32, fontWeight: 600, textAlign: 'center', marginBottom: 48, letterSpacing: '-0.02em' }}>
-          Do score ao <span style={{ color: 'var(--brand-gold)' }}>certificado verificável</span>
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
-          {HOW_STEPS.map(s => (
-            <div key={s.n} className="panel-inner" style={{ padding: 22 }}>
-              <div className="mono" style={{ fontSize: 11, color: 'var(--brand-gold)', marginBottom: 10, letterSpacing: '0.12em' }}>{s.n}</div>
-              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--text-primary)' }}>{s.title}</div>
-              <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{s.desc}</div>
-            </div>
-          ))}
+      <section style={{ maxWidth: 1120, margin: '0 auto 96px', padding: '0 24px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 52 }}>
+          <div style={{ fontSize: 10.5, letterSpacing: '0.22em', color: 'var(--brand-gold)', fontFamily: 'var(--font-mono)', marginBottom: 14 }}>FLUXO FORENSE</div>
+          <h2 style={{ fontSize: 'clamp(26px, 3.4vw, 36px)', fontWeight: 600, letterSpacing: '-0.025em' }}>
+            Do score ao <span className="text-gold-gradient">certificado verificável</span>
+          </h2>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(196px, 1fr))', gap: 18 }}>
+          {HOW_STEPS.map((s, i) => {
+            const Icon = HOW_ICONS[i]
+            return (
+              <div key={s.n} className="frame-card" style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span className="frame-icon"><Icon size={20} /></span>
+                  <span className="mono" style={{ fontSize: 12, color: 'color-mix(in srgb, var(--brand-gold) 65%, transparent)', letterSpacing: '0.14em' }}>{s.n}</span>
+                </div>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 8, color: 'var(--text-primary)' }}>{s.title}</div>
+                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{s.desc}</div>
+                </div>
+              </div>
+            )
+          })}
         </div>
       </section>
 
       {/* ─────────── COMPARATIVO ─────────── */}
-      <section style={{ maxWidth: 900, margin: '0 auto 80px', padding: '0 24px' }}>
-        <h2 style={{ fontSize: 32, fontWeight: 600, textAlign: 'center', marginBottom: 40, letterSpacing: '-0.02em' }}>
-          Conformidade acadêmica com <span style={{ color: 'var(--brand-gold)' }}>rastreabilidade pública</span>
-        </h2>
+      <section style={{ maxWidth: 920, margin: '0 auto 96px', padding: '0 24px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 44 }}>
+          <div style={{ fontSize: 10.5, letterSpacing: '0.22em', color: 'var(--brand-gold)', fontFamily: 'var(--font-mono)', marginBottom: 14 }}>COMPARATIVO</div>
+          <h2 style={{ fontSize: 'clamp(26px, 3.4vw, 36px)', fontWeight: 600, letterSpacing: '-0.025em' }}>
+            Conformidade acadêmica com <span className="text-gold-gradient">rastreabilidade pública</span>
+          </h2>
+        </div>
         <div className="panel" style={{ overflow: 'hidden', padding: 0 }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--border-soft)' }}>
+              <tr style={{ borderBottom: '1px solid var(--border-strong)' }}>
                 {['Funcionalidade', 'ALSHAM', 'GPTZero', 'Turnitin', 'Originality'].map((h, i) => (
                   <th key={h} style={{
-                    padding: '14px 20px', textAlign: i === 0 ? 'left' : 'center',
-                    fontSize: 12, color: i === 1 ? 'var(--brand-gold)' : 'var(--text-muted)',
-                    fontWeight: i === 1 ? 700 : 500,
+                    padding: '16px 20px', textAlign: i === 0 ? 'left' : 'center',
+                    fontSize: i === 1 ? 12.5 : 12, color: i === 1 ? 'var(--brand-gold)' : 'var(--text-muted)',
+                    fontWeight: i === 1 ? 800 : 500, letterSpacing: i === 1 ? '0.04em' : '0.02em',
+                    background: i === 1 ? 'color-mix(in srgb, var(--brand-gold) 9%, transparent)' : 'transparent',
+                    borderTopLeftRadius: 0,
                   }}>{h}</th>
                 ))}
               </tr>
@@ -180,11 +232,14 @@ export default function LandingPage() {
             <tbody>
               {COMPARISON.map((row, i) => (
                 <tr key={row.feat} style={{ borderBottom: i < COMPARISON.length - 1 ? '1px solid var(--border-soft)' : 'none' }}>
-                  <td style={{ padding: '13px 20px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.feat}</td>
+                  <td style={{ padding: '14px 20px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.feat}</td>
                   {[row.al, row.gz, row.tt, row.or].map((v, j) => (
-                    <td key={j} style={{ textAlign: 'center', padding: '13px 12px' }}>
+                    <td key={j} style={{
+                      textAlign: 'center', padding: '14px 12px',
+                      background: j === 0 ? 'color-mix(in srgb, var(--brand-gold) 7%, transparent)' : 'transparent',
+                    }}>
                       {v
-                        ? <CheckCircle size={15} style={{ color: j === 0 ? 'var(--status-success)' : 'var(--text-muted)', margin: '0 auto' }} />
+                        ? <CheckCircle size={16} style={{ color: j === 0 ? 'var(--status-success)' : 'var(--text-muted)', margin: '0 auto' }} />
                         : <span style={{ color: 'var(--border-strong)', fontSize: 16 }}>–</span>}
                     </td>
                   ))}
