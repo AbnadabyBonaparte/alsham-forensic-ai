@@ -154,7 +154,7 @@ export async function POST(req: NextRequest) {
         compliance_risk: result.compliance?.riskLevel,
         paste_detected: input.pasteDetected,
         reverse_translation_detected: result.reverseTranslationDetected,
-        analysis_engine: 'claude-sonnet-4+gpt-4o-mini-ensemble',
+        analysis_engine: 'alsham-forensic-ensemble-v1',
         processing_time_ms: processingTime,
         cid_code: result.cidCode,
       })

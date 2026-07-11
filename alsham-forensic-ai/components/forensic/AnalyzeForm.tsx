@@ -40,8 +40,8 @@ const INSTITUTIONS = [
 const STEPS = [
   'Calculando hash SHA-256…',
   'Verificando histórico de resubmissões…',
-  'Analisando com Claude claude-sonnet-4…',
-  'Calibrando com GPT-4o-mini…',
+  'Analisando com o motor forense ALSHAM…',
+  'Calibrando ensemble multi-modelo…',
   'Verificando citações bibliográficas…',
 ]
 

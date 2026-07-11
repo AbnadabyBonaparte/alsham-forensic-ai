@@ -17,7 +17,7 @@ const TRUST_ITEMS = [
 const HOW_STEPS = [
   { n: '01', title: 'Cole o texto',           desc: 'Textoarea com detecção automática de paste e hash SHA-256.' },
   { n: '02', title: 'Selecione a instituição', desc: '11 instituições com normativas reais mapeadas.' },
-  { n: '03', title: 'Análise ensemble',        desc: 'Claude claude-sonnet-4 (70%) + GPT-4o-mini (30%) em paralelo.' },
+  { n: '03', title: 'Análise ensemble',        desc: 'Motor forense ALSHAM com ensemble multi-modelo em paralelo.' },
   { n: '04', title: 'Laudo jurídico',          desc: 'Conformidade citada por artigo, citações verificadas.' },
   { n: '05', title: 'Certificado CID',          desc: 'Hash + QR verificável publicamente. Download PDF.' },
 ]
@@ -34,9 +34,9 @@ const COMPARISON = [
 
 const FAQ = [
   { q: 'O resultado tem valor jurídico?', a: 'O laudo cita artigos específicos de portarias federais (CNPq) e resoluções institucionais, e o CID com hash SHA-256 pode servir como evidência de apoio em processo administrativo — sempre sujeita a revisão humana. É um resultado probabilístico, não substitui perícia oficial nem constitui prova pericial definitiva.' },
-  { q: 'Falsos positivos são possíveis?',      a: 'Sim — todo sistema de detecção tem taxa de erro. O ALSHAM usa ensemble de dois LLMs + estilometria para reduzir esse risco, mas nenhum resultado é definitivo. Sempre revise com o contexto do autor.' },
+  { q: 'Falsos positivos são possíveis?',      a: 'Sim — todo sistema de detecção tem taxa de erro. O ALSHAM usa um ensemble multi-modelo proprietário + estilometria para reduzir esse risco, mas nenhum resultado é definitivo. Sempre revise com o contexto do autor.' },
   { q: 'Os textos são armazenados?',           a: 'Apenas o hash SHA-256 e a prévia (200 chars) são salvos para emissão do CID. O texto completo nunca é retido.' },
-  { q: 'Funciona para outras línguas?',        a: 'Sim. O motor Claude analisa português, inglês e espanhol, sempre com a mesma ressalva de margem de erro.' },
+  { q: 'Funciona para outras línguas?',        a: 'Sim. O motor forense ALSHAM analisa português, inglês e espanhol, sempre com a mesma ressalva de margem de erro.' },
 ]
 
 export default function LandingPage() {
