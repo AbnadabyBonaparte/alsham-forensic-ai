@@ -53,6 +53,7 @@ export function AnalyzeForm({ recentAnalyses, analysesUsed, analysesLimit, maxCh
   const [loading, setLoading]         = useState(false)
   const [step, setStep]               = useState(0)
   const [error, setError]             = useState('')
+  const [paywall, setPaywall]         = useState(false)
   const [result, setResult]           = useState<AnalysisResult | null>(null)
 
   const usedPct = analysesLimit === -1 ? 0 : Math.min((analysesUsed / analysesLimit) * 100, 100)
@@ -70,6 +71,7 @@ export function AnalyzeForm({ recentAnalyses, analysesUsed, analysesLimit, maxCh
     e.preventDefault()
     if (text.length < 80 || atLimit) return
     setError('')
+    setPaywall(false)
     setLoading(true)
     setResult(null)
     setStep(0)
@@ -83,7 +85,14 @@ export function AnalyzeForm({ recentAnalyses, analysesUsed, analysesLimit, maxCh
         body: JSON.stringify({ text, institutionId, pasteDetected, pasteCharCount }),
       })
       const data = await res.json() as AnalysisResult & { error?: string; message?: string }
-      if (!res.ok) { setError(data.message ?? data.error ?? 'Erro na análise'); return }
+      if (!res.ok) {
+        // Anonymous free-tier exhausted (402) or plan quota reached — surface an upgrade CTA.
+        if (res.status === 402 || data.error === 'ANON_LIMIT_REACHED' || data.error === 'QUOTA_EXCEEDED') {
+          setPaywall(true)
+        }
+        setError(data.message ?? data.error ?? 'Erro na análise')
+        return
+      }
       setResult(data)
     } catch {
       setError('Erro de conexão. Tente novamente.')
@@ -160,6 +169,41 @@ export function AnalyzeForm({ recentAnalyses, analysesUsed, analysesLimit, maxCh
             }}>
               <AlertCircle size={14} style={{ color: 'var(--status-danger)', flexShrink: 0 }} />
               <span style={{ fontSize: 13, color: 'var(--status-danger)' }}>{error}</span>
+            </div>
+          )}
+
+          {/* Paywall CTA — shown when the free/plan limit is reached */}
+          {paywall && (
+            <div style={{
+              background: 'var(--surface-700)',
+              border: '1px solid color-mix(in srgb, var(--brand-gold) 40%, transparent)',
+              borderRadius: 12, padding: '16px 16px',
+              display: 'flex', flexDirection: 'column', gap: 10,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <CidSeal size={16} style={{ color: 'var(--brand-gold)' }} />
+                <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
+                  Você atingiu o limite gratuito
+                </span>
+              </div>
+              <p style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5, margin: 0 }}>
+                Crie uma conta gratuita ou faça upgrade para continuar analisando textos com laudo completo e certificado CID.
+              </p>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <a href="/signup" style={{ flex: 1 }}>
+                  <button type="button" style={{
+                    width: '100%', background: 'var(--brand-gold)', color: 'var(--ink-950)',
+                    border: 'none', borderRadius: 8, padding: '9px 0', fontSize: 12, fontWeight: 700, cursor: 'pointer',
+                  }}>Criar conta grátis</button>
+                </a>
+                <a href="/pricing" style={{ flex: 1 }}>
+                  <button type="button" style={{
+                    width: '100%', background: 'transparent', color: 'var(--brand-gold)',
+                    border: '1px solid color-mix(in srgb, var(--brand-gold) 40%, transparent)',
+                    borderRadius: 8, padding: '9px 0', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                  }}>Ver planos</button>
+                </a>
+              </div>
             </div>
           )}
 
