@@ -255,12 +255,19 @@ export function AnalyzeForm({ recentAnalyses, analysesUsed, analysesLimit, maxCh
         {!loading && !result && (
           <div style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            minHeight: 400, gap: 12, color: 'var(--text-muted)',
+            minHeight: 440, gap: 18, padding: 24,
           }}>
-            <NormativeShield size={48} style={{ color: 'var(--border-strong)', opacity: 0.5 }} />
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>Pronto para análise forense</div>
-              <div style={{ fontSize: 13 }}>Cole um texto no painel esquerdo e clique em Analisar.</div>
+            <div className="frame-card" style={{ padding: '40px 44px', textAlign: 'center', maxWidth: 420, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+              <span className="frame-icon" style={{ width: 56, height: 56 }}><NormativeShield size={26} /></span>
+              <div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>Pronto para análise forense</div>
+                <div style={{ fontSize: 13.5, color: 'var(--text-secondary)', lineHeight: 1.6 }}>Cole um texto no painel esquerdo, selecione a instituição e clique em Analisar.</div>
+              </div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', marginTop: 4 }}>
+                {['SHA-256', 'CID verificável', 'Citações'].map(t => (
+                  <span key={t} className="mono" style={{ fontSize: 10.5, letterSpacing: '0.1em', color: 'var(--text-muted)', border: '1px solid var(--border-soft)', borderRadius: 999, padding: '4px 11px' }}>{t}</span>
+                ))}
+              </div>
             </div>
           </div>
         )}

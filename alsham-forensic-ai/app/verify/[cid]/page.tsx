@@ -20,6 +20,7 @@ export default async function VerifyPage({ params }: { params: Promise<{ cid: st
 
   return (
     <div style={{
+      position: 'relative',
       minHeight: '100vh',
       background: 'var(--bg-app)',
       display: 'flex',
@@ -27,11 +28,13 @@ export default async function VerifyPage({ params }: { params: Promise<{ cid: st
       alignItems: 'center',
       justifyContent: 'center',
       padding: '48px 24px',
+      overflow: 'hidden',
     }}>
-      {/* Subtle glow */}
-      <div className="glow-gold" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }} />
+      {/* shared gallery-grade depth */}
+      <div className="ambient-scene" aria-hidden />
+      <div className="hero-glow" aria-hidden style={{ top: '44%' }} />
 
-      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: 580 }}>
+      <div className="above" style={{ width: '100%', maxWidth: 580 }}>
         <VerifyResult data={data as Record<string, string | number>} cid={cid} />
       </div>
     </div>

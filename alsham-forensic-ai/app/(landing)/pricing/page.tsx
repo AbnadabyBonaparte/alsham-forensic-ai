@@ -67,42 +67,51 @@ export default function PricingPage() {
   }
 
   return (
-    <div style={{ background: 'var(--ink-950)', minHeight: '100vh', padding: '80px 24px' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ position: 'relative', background: 'var(--bg-app)', minHeight: '100vh', padding: '96px 24px 88px', overflow: 'hidden' }}>
+      {/* shared gallery-grade depth */}
+      <div className="ambient-scene" aria-hidden />
+
+      <div className="above" style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: 60 }}>
-          <div style={{ fontSize: 10, letterSpacing: 4, color: 'var(--brand-gold)', marginBottom: 12 }}>PLANOS E PREÇOS</div>
-          <h1 style={{ fontSize: 40, fontWeight: 800, color: 'var(--text-primary)', marginBottom: 16 }}>Escolha seu plano</h1>
+          <div className="eyebrow" style={{ marginBottom: 14 }}>PLANOS E PREÇOS</div>
+          <h1 className="page-title" style={{ marginBottom: 16 }}>
+            Escolha seu <span className="text-gold-gradient">plano forense</span>
+          </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: 16 }}>Comece gratuitamente. Faça upgrade quando precisar de mais.</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20, alignItems: 'stretch' }}>
           {PLANS.map(plan => (
             <div
               key={plan.id}
+              className="frame-card"
               style={{
-                background: plan.highlight ? 'var(--surface-600)' : 'var(--surface-800)',
-                borderRadius: 16,
-                padding: 28,
-                border: plan.highlight ? '2px solid var(--brand-gold)' : '1px solid var(--border-strong)',
+                padding: '34px 28px 28px',
+                border: plan.highlight ? '1.5px solid color-mix(in srgb, var(--brand-gold) 60%, transparent)' : '1px solid var(--border-soft)',
+                boxShadow: plan.highlight ? '0 24px 60px -30px rgba(199,162,74,0.5)' : 'none',
                 position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
               }}
             >
               {plan.highlight && (
                 <div style={{
-                  position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
-                  background: 'var(--brand-gold)', color: 'var(--ink-950)', fontSize: 10, fontWeight: 800,
-                  letterSpacing: 2, padding: '4px 14px', borderRadius: 100,
+                  position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)',
+                  background: 'linear-gradient(180deg, var(--gold-hover), var(--brand-gold))', color: 'var(--ink-950)',
+                  fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', padding: '5px 16px', borderRadius: 999,
+                  fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap',
+                  boxShadow: '0 8px 24px -10px rgba(199,162,74,0.6)',
                 }}>MAIS POPULAR</div>
               )}
-              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--brand-gold)', marginBottom: 8 }}>{plan.name}</div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 20 }}>
-                <span style={{ fontSize: 32, fontWeight: 800, color: 'var(--text-primary)' }}>{plan.price}</span>
-                <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>{plan.period}</span>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--brand-gold)', marginBottom: 10 }}>{plan.name}</div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 22 }}>
+                <span style={{ fontSize: 33, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{plan.price}</span>
+                <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>{plan.period}</span>
               </div>
-              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px' }}>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', flex: 1 }}>
                 {plan.features.map(f => (
-                  <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, fontSize: 13, color: 'var(--text-secondary)' }}>
-                    <CheckCircle size={14} color="var(--status-success)" />
+                  <li key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: 9, marginBottom: 11, fontSize: 13, color: 'var(--text-secondary)' }}>
+                    <CheckCircle size={14} color="var(--status-success)" style={{ marginTop: 2, flexShrink: 0 }} />
                     {f}
                   </li>
                 ))}
@@ -110,11 +119,11 @@ export default function PricingPage() {
               <Button
                 onClick={() => subscribe(plan.planKey)}
                 disabled={loading === plan.planKey}
-                style={{
-                  width: '100%',
-                  background: plan.highlight ? 'var(--brand-gold)' : 'transparent',
-                  color: plan.highlight ? 'var(--ink-950)' : 'var(--brand-gold)',
-                  border: plan.highlight ? 'none' : '1px solid var(--brand-gold)',
+                className={plan.highlight ? 'btn-gold' : undefined}
+                style={plan.highlight ? { width: '100%', height: 44 } : {
+                  width: '100%', height: 44,
+                  background: 'transparent', color: 'var(--brand-gold)',
+                  border: '1px solid color-mix(in srgb, var(--brand-gold) 45%, transparent)',
                   fontWeight: 700,
                 }}
               >
@@ -123,6 +132,10 @@ export default function PricingPage() {
             </div>
           ))}
         </div>
+
+        <p style={{ textAlign: 'center', marginTop: 44, fontSize: 12.5, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em' }}>
+          Todos os planos incluem Certificado de Integridade Digital com hash SHA-256 verificável.
+        </p>
       </div>
     </div>
   )

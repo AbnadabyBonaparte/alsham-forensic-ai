@@ -39,52 +39,57 @@ export default function SettingsPage() {
   }
 
   return (
-    <div style={{ maxWidth: 600 }}>
-      <h1 style={{ fontSize: 26, fontWeight: 700, marginBottom: 32, color: 'var(--text-primary)' }}>Configurações</h1>
+    <div style={{ padding: '40px clamp(24px, 4vw, 48px)', maxWidth: 640, margin: '0 auto' }}>
+      <div className="eyebrow" style={{ marginBottom: 12 }}>CONTA</div>
+      <h1 className="page-title" style={{ marginBottom: 30 }}>Configurações</h1>
 
-      <div style={{ background: 'var(--surface-600)', borderRadius: 16, padding: 28, marginBottom: 24, border: '1px solid var(--border-strong)' }}>
+      <div className="panel" style={{ padding: 28, marginBottom: 22 }}>
         <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20, color: 'var(--text-primary)' }}>Perfil</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <Label style={{ color: 'var(--text-secondary)', fontSize: 13 }}>Nome</Label>
+            <Label className="field-label">Nome</Label>
             <Input
               value={name}
               onChange={e => setName(e.target.value)}
-              style={{ background: 'var(--ink-950)', border: '1px solid var(--border-strong)', color: 'var(--text-primary)', marginTop: 6 }}
+              className="field-input"
             />
           </div>
           <div>
-            <Label style={{ color: 'var(--text-secondary)', fontSize: 13 }}>E-mail</Label>
+            <Label className="field-label">E-mail</Label>
             <Input
               value={profile?.email ?? ''}
               disabled
-              style={{ background: 'var(--ink-950)', border: '1px solid var(--border-strong)', color: 'var(--text-muted)', marginTop: 6 }}
+              className="field-input"
+              style={{ color: 'var(--text-muted)', opacity: 0.8 }}
             />
           </div>
-          {msg && <p style={{ fontSize: 13, color: 'var(--status-success)' }}>{msg}</p>}
+          {msg && (
+            <div className="bg-success-sf" style={{ padding: '10px 14px', fontSize: 13, color: 'var(--status-success)' }}>{msg}</div>
+          )}
           <Button
             onClick={saveProfile}
             disabled={saving}
-            style={{ background: 'var(--brand-gold)', color: 'var(--ink-950)', fontWeight: 700, alignSelf: 'flex-start' }}
+            className="btn-gold"
+            style={{ alignSelf: 'flex-start', padding: '10px 24px', height: 42 }}
           >
             {saving ? 'Salvando...' : 'Salvar'}
           </Button>
         </div>
       </div>
 
-      <div style={{ background: 'var(--surface-600)', borderRadius: 16, padding: 28, border: '1px solid var(--border-strong)' }}>
+      <div className="panel" style={{ padding: 28 }}>
         <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, color: 'var(--text-primary)' }}>Assinatura</h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 20 }}>
           Plano atual: <strong style={{ color: 'var(--brand-gold)' }}>{(profile?.plans as Record<string, unknown>)?.name_pt as string ?? 'Gratuito'}</strong>
         </p>
         <div style={{ display: 'flex', gap: 12 }}>
-          <Button
+          <button
             onClick={manageSubscription}
-            variant="outline"
-            style={{ borderColor: 'var(--brand-gold)', color: 'var(--brand-gold)' }}
+            className="btn-ghost"
+            style={{ padding: '10px 22px', fontSize: 14 }}
           >
             Gerenciar Assinatura
-          </Button>
+          </button>
         </div>
       </div>
     </div>

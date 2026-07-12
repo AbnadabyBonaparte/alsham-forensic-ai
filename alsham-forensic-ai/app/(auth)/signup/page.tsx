@@ -1,6 +1,7 @@
 'use client'
 import { Suspense, useState } from 'react'
 import Link from 'next/link'
+import { CheckCircle } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -46,40 +47,49 @@ function SignupForm() {
 
   if (success) {
     return (
-      <div style={{ textAlign: 'center', maxWidth: 420 }}>
-        <div style={{ fontSize: 48, marginBottom: 16, color: 'var(--status-success)' }}>✓</div>
-        <h2 style={{ color: 'var(--status-success)', marginBottom: 8 }}>Conta criada!</h2>
-        <p style={{ color: 'var(--text-secondary)' }}>Verifique seu e-mail para confirmar a conta e começar a analisar.</p>
+      <div className="panel above" style={{ padding: 40, textAlign: 'center', width: '100%' }}>
+        <div style={{
+          width: 56, height: 56, borderRadius: 16, margin: '0 auto 18px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'var(--surface-success)', border: '1px solid rgba(24,178,107,0.35)',
+        }}>
+          <CheckCircle size={26} style={{ color: 'var(--status-success)' }} />
+        </div>
+        <h2 style={{ color: 'var(--text-primary)', marginBottom: 10, fontSize: 20, fontWeight: 700 }}>Conta criada</h2>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.6 }}>Verifique seu e-mail para confirmar a conta e começar a analisar.</p>
+        <Link href="/login">
+          <button className="btn-ghost" style={{ marginTop: 22, padding: '10px 22px', fontSize: 13 }}>Ir para o login</button>
+        </Link>
       </div>
     )
   }
 
   return (
-    <div style={{ width: '100%', maxWidth: 420 }}>
-      <div style={{ textAlign: 'center', marginBottom: 32 }}>
-        <div style={{ fontSize: 10, letterSpacing: 4, color: 'var(--brand-gold)', marginBottom: 8 }}>ALSHAM FORENSIC AI</div>
-        <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)' }}>Criar conta gratuita</h1>
+    <div style={{ width: '100%' }}>
+      <div style={{ textAlign: 'center', marginBottom: 26 }}>
+        <div className="eyebrow" style={{ marginBottom: 12 }}>3 ANÁLISES GRATUITAS · SEM CARTÃO</div>
+        <h1 style={{ fontSize: 26, fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>Criar conta gratuita</h1>
         <p style={{ color: 'var(--text-secondary)', marginTop: 8, fontSize: 14 }}>
           Já tem conta?{' '}
-          <Link href="/login" style={{ color: 'var(--brand-gold)', textDecoration: 'none' }}>Entrar</Link>
+          <Link href="/login" style={{ color: 'var(--brand-gold)', textDecoration: 'none', fontWeight: 600 }}>Entrar</Link>
         </p>
       </div>
 
-      <div style={{ background: 'var(--surface-600)', borderRadius: 16, padding: 32, border: '1px solid var(--border-strong)' }}>
+      <div className="panel" style={{ padding: 32 }}>
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <Label htmlFor="name" style={{ color: 'var(--text-secondary)', fontSize: 13 }}>Nome completo</Label>
+            <Label htmlFor="name" className="field-label">Nome completo</Label>
             <Input
               id="name"
               value={name}
               onChange={e => setName(e.target.value)}
               required
               placeholder="Seu nome"
-              style={{ background: 'var(--ink-950)', border: '1px solid var(--border-strong)', color: 'var(--text-primary)', marginTop: 6 }}
+              className="field-input"
             />
           </div>
           <div>
-            <Label htmlFor="email" style={{ color: 'var(--text-secondary)', fontSize: 13 }}>E-mail institucional</Label>
+            <Label htmlFor="email" className="field-label">E-mail institucional</Label>
             <Input
               id="email"
               type="email"
@@ -87,11 +97,11 @@ function SignupForm() {
               onChange={e => setEmail(e.target.value)}
               required
               placeholder="seu@email.com"
-              style={{ background: 'var(--ink-950)', border: '1px solid var(--border-strong)', color: 'var(--text-primary)', marginTop: 6 }}
+              className="field-input"
             />
           </div>
           <div>
-            <Label htmlFor="password" style={{ color: 'var(--text-secondary)', fontSize: 13 }}>Senha (mín. 8 caracteres)</Label>
+            <Label htmlFor="password" className="field-label">Senha (mín. 8 caracteres)</Label>
             <Input
               id="password"
               type="password"
@@ -100,18 +110,19 @@ function SignupForm() {
               required
               minLength={8}
               placeholder="Crie uma senha segura"
-              style={{ background: 'var(--ink-950)', border: '1px solid var(--border-strong)', color: 'var(--text-primary)', marginTop: 6 }}
+              className="field-input"
             />
           </div>
           {error && (
-            <div style={{ background: 'var(--surface-danger)', border: '1px solid var(--status-danger)', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: 'var(--status-danger)' }}>
+            <div className="bg-danger-sf" style={{ padding: '10px 14px', fontSize: 13, color: 'var(--status-danger)' }}>
               {error}
             </div>
           )}
           <Button
             type="submit"
             disabled={loading}
-            style={{ background: 'var(--brand-gold)', color: 'var(--ink-950)', fontWeight: 700, marginTop: 8 }}
+            className="btn-gold"
+            style={{ marginTop: 6, height: 44 }}
           >
             {loading ? 'Criando conta...' : 'Criar Conta Gratuita'}
           </Button>

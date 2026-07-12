@@ -26,29 +26,30 @@ export default async function DashboardPage() {
   const usedPct = limit === -1 ? 0 : Math.min((used / limit) * 100, 100)
 
   return (
-    <div>
-      <h1 style={{ fontSize: 26, fontWeight: 700, marginBottom: 8, color: 'var(--text-primary)' }}>Painel</h1>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: 32 }}>Bem-vindo, {profile?.full_name ?? user?.email}</p>
+    <div style={{ padding: '40px clamp(24px, 4vw, 48px)', maxWidth: 1080, margin: '0 auto' }}>
+      <div className="eyebrow" style={{ marginBottom: 12 }}>PAINEL FORENSE</div>
+      <h1 className="page-title" style={{ marginBottom: 8 }}>Bem-vindo{profile?.full_name ? `, ${profile.full_name}` : ''}</h1>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: 34, fontSize: 15 }}>Acompanhe seu uso e histórico de análises.</p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 32 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 16, marginBottom: 30 }}>
         {[
           { label: 'Análises este mês', value: `${used} / ${limit === -1 ? '∞' : limit}`, icon: FileText, color: 'var(--brand-gold)' },
           { label: 'Plano atual', value: (plan?.name_pt as string) ?? 'Gratuito', icon: TrendingUp, color: 'var(--brand-gold)' },
           { label: 'Total de análises', value: recent.length >= 10 ? '10+' : String(recent.length), icon: CheckCircle, color: 'var(--status-success)' },
         ].map(s => (
-          <div key={s.label} style={{ background: 'var(--surface-600)', borderRadius: 12, padding: 20, border: '1px solid var(--border-strong)' }}>
-            <s.icon size={20} color={s.color} style={{ marginBottom: 10 }} />
-            <div style={{ fontSize: 24, fontWeight: 700, color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>{s.label}</div>
+          <div key={s.label} className="metric-card">
+            <span className="frame-icon" style={{ width: 38, height: 38, marginBottom: 14 }}><s.icon size={18} color={s.color} /></span>
+            <div style={{ fontSize: 26, fontWeight: 700, color: s.color, letterSpacing: '-0.02em' }}>{s.value}</div>
+            <div style={{ fontSize: 12.5, color: 'var(--text-secondary)', marginTop: 4 }}>{s.label}</div>
           </div>
         ))}
       </div>
 
       {limit !== -1 && (
-        <div style={{ background: 'var(--surface-600)', borderRadius: 12, padding: 20, marginBottom: 32, border: '1px solid var(--border-strong)' }}>
+        <div className="panel" style={{ padding: 22, marginBottom: 30 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
             <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Uso do plano este mês</span>
-            <span style={{ fontSize: 13, color: 'var(--brand-gold)' }}>{used} / {limit}</span>
+            <span className="mono" style={{ fontSize: 13, color: 'var(--brand-gold)' }}>{used} / {limit}</span>
           </div>
           <div style={{ background: 'var(--ink-950)', borderRadius: 100, height: 8 }}>
             <div style={{ width: `${usedPct}%`, background: usedPct >= 90 ? 'var(--status-danger)' : 'var(--brand-gold)', height: 8, borderRadius: 100, transition: 'width 0.6s ease' }} />
@@ -59,22 +60,25 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <div style={{ marginBottom: 32 }}>
+      <div style={{ marginBottom: 34 }}>
         <Link href="/analyze">
-          <Button style={{ background: 'var(--brand-gold)', color: 'var(--ink-950)', fontWeight: 700, padding: '12px 24px' }}>
+          <Button className="btn-gold" style={{ padding: '12px 26px', height: 46 }}>
             Nova Análise Forense
           </Button>
         </Link>
       </div>
 
       <div>
-        <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, color: 'var(--text-primary)' }}>Análises Recentes</h2>
+        <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>Análises Recentes</h2>
         {recent.length === 0 ? (
-          <div style={{ background: 'var(--surface-600)', borderRadius: 12, padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>
-            Nenhuma análise ainda. <Link href="/analyze" style={{ color: 'var(--brand-gold)' }}>Analisar agora</Link>
+          <div className="frame-card" style={{ padding: '48px 32px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+            <span className="frame-icon" style={{ width: 48, height: 48, marginBottom: 6 }}><FileText size={22} /></span>
+            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-secondary)' }}>Nenhuma análise ainda</div>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 8 }}>Seu histórico forense aparece aqui após a primeira análise.</div>
+            <Link href="/analyze"><button className="btn-ghost" style={{ padding: '9px 20px', fontSize: 13 }}>Analisar agora</button></Link>
           </div>
         ) : (
-          <div style={{ background: 'var(--surface-600)', borderRadius: 12, overflow: 'hidden', border: '1px solid var(--border-strong)' }}>
+          <div className="panel" style={{ overflow: 'hidden', padding: 0 }}>
             {recent.map((a, i) => (
               <div
                 key={a.id}

@@ -40,20 +40,20 @@ function LoginForm() {
   }
 
   return (
-    <div style={{ width: '100%', maxWidth: 420 }}>
-      <div style={{ textAlign: 'center', marginBottom: 32 }}>
-        <div style={{ fontSize: 10, letterSpacing: 4, color: 'var(--brand-gold)', marginBottom: 8 }}>ALSHAM FORENSIC AI</div>
-        <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)' }}>Entrar na conta</h1>
+    <div style={{ width: '100%' }}>
+      <div style={{ textAlign: 'center', marginBottom: 26 }}>
+        <div className="eyebrow" style={{ marginBottom: 12 }}>ACESSO SEGURO</div>
+        <h1 style={{ fontSize: 26, fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>Entrar na conta</h1>
         <p style={{ color: 'var(--text-secondary)', marginTop: 8, fontSize: 14 }}>
           Sem conta?{' '}
-          <Link href="/signup" style={{ color: 'var(--brand-gold)', textDecoration: 'none' }}>Criar gratuitamente</Link>
+          <Link href="/signup" style={{ color: 'var(--brand-gold)', textDecoration: 'none', fontWeight: 600 }}>Criar gratuitamente</Link>
         </p>
       </div>
 
-      <div style={{ background: 'var(--surface-600)', borderRadius: 16, padding: 32, border: '1px solid var(--border-strong)' }}>
+      <div className="panel" style={{ padding: 32 }}>
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <Label htmlFor="email" style={{ color: 'var(--text-secondary)', fontSize: 13 }}>E-mail</Label>
+            <Label htmlFor="email" className="field-label">E-mail</Label>
             <Input
               id="email"
               type="email"
@@ -61,11 +61,11 @@ function LoginForm() {
               onChange={e => setEmail(e.target.value)}
               required
               placeholder="seu@email.com"
-              style={{ background: 'var(--ink-950)', border: '1px solid var(--border-strong)', color: 'var(--text-primary)', marginTop: 6 }}
+              className="field-input"
             />
           </div>
           <div>
-            <Label htmlFor="password" style={{ color: 'var(--text-secondary)', fontSize: 13 }}>Senha</Label>
+            <Label htmlFor="password" className="field-label">Senha</Label>
             <Input
               id="password"
               type="password"
@@ -73,29 +73,34 @@ function LoginForm() {
               onChange={e => setPassword(e.target.value)}
               required
               placeholder="Sua senha"
-              style={{ background: 'var(--ink-950)', border: '1px solid var(--border-strong)', color: 'var(--text-primary)', marginTop: 6 }}
+              className="field-input"
             />
           </div>
           {error && (
-            <div style={{ background: 'var(--surface-danger)', border: '1px solid var(--status-danger)', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: 'var(--status-danger)' }}>
+            <div className="bg-danger-sf" style={{ padding: '10px 14px', fontSize: 13, color: 'var(--status-danger)' }}>
               {error}
             </div>
           )}
           <Button
             type="submit"
             disabled={loading}
-            style={{ background: 'var(--brand-gold)', color: 'var(--ink-950)', fontWeight: 700, marginTop: 8 }}
+            className="btn-gold"
+            style={{ marginTop: 6, height: 44 }}
           >
             {loading ? 'Entrando...' : 'Entrar'}
           </Button>
         </form>
 
-        <div style={{ textAlign: 'center', margin: '20px 0', color: 'var(--text-muted)', fontSize: 13 }}>ou</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '22px 0' }}>
+          <span style={{ flex: 1, height: 1, background: 'var(--border-soft)' }} />
+          <span style={{ color: 'var(--text-muted)', fontSize: 12, fontFamily: 'var(--font-mono)' }}>ou</span>
+          <span style={{ flex: 1, height: 1, background: 'var(--border-soft)' }} />
+        </div>
 
         <Button
           onClick={handleGoogle}
           variant="outline"
-          style={{ width: '100%', borderColor: 'var(--border-strong)', color: 'var(--text-primary)', background: 'transparent' }}
+          style={{ width: '100%', height: 44, borderColor: 'var(--border-strong)', color: 'var(--text-primary)', background: 'color-mix(in srgb, var(--surface-800) 60%, transparent)' }}
         >
           Continuar com Google
         </Button>

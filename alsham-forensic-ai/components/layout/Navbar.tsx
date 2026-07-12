@@ -30,13 +30,13 @@ export function Navbar() {
           <Link href="/pricing" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 14, padding: '6px 12px' }}>Preços</Link>
           {user ? (
             <Link href="/dashboard">
-              <Button style={{ background: 'var(--brand-gold)', color: 'var(--ink-950)', fontWeight: 700, fontSize: 13 }}>Painel</Button>
+              <Button className="btn-gold" style={{ fontSize: 13, padding: '8px 18px' }}>Painel</Button>
             </Link>
           ) : (
             <>
               <Link href="/login" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 14, padding: '6px 12px' }}>Entrar</Link>
               <Link href="/signup">
-                <Button style={{ background: 'var(--brand-gold)', color: 'var(--ink-950)', fontWeight: 700, fontSize: 13 }}>Criar Conta</Button>
+                <Button className="btn-gold" style={{ fontSize: 13, padding: '8px 18px' }}>Criar Conta</Button>
               </Link>
             </>
           )}
