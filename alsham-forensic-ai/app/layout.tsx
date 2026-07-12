@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
@@ -26,6 +26,20 @@ export const metadata: Metadata = {
     description: 'Auditoria forense de IA com conformidade CNPq 2664/2026',
     type: 'website',
   },
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    title: 'Forensic',
+    statusBarStyle: 'black-translucent',
+  },
+  icons: {
+    icon: '/favicon-32.png',
+    apple: '/apple-touch-icon.png',
+  },
+}
+
+export const viewport: Viewport = {
+  themeColor: '#08111F',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
