@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,7 +23,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
-  const supabase = await createClient()
+  // Service-role client: the webhook has no end-user session and must bypass
+  // RLS to write the service-role-only stripe_events log and update profiles
+  // keyed by stripe_customer_id.
+  const supabase = createAdminClient()
 
   // Log event (ignore duplicate webhook deliveries)
   await supabase.from('stripe_events').upsert({
