@@ -1,5 +1,5 @@
 {
-  "name": "ALSHAM Forensic",
+  "name": "ALSHAM Forensic AI",
   "short_name": "Forensic",
   "description": "Inteligência forense com motor ALSHAM: detecte texto sintético, valide citações e emita Certificado de Integridade Digital verificável.",
   "start_url": "/",
@@ -9,10 +9,27 @@
   "background_color": "#08111F",
   "theme_color": "#08111F",
   "lang": "pt-BR",
-  "categories": ["business", "productivity", "education"],
+  "categories": [
+    "business",
+    "productivity",
+    "education"
+  ],
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
